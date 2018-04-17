@@ -1,0 +1,8 @@
+business_attribute_table: 124095
+business_category_table: 33619
+business_table: 11481
+checkin_table: 481360
+friendship_table: 1052706
+hours_open_table: 8529
+review_table: 416479
+user_table: 192999

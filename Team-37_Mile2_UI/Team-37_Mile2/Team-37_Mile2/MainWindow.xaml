@@ -1,0 +1,27 @@
+﻿<Window x:Class="Team37_Mile2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Team 37 Milestone 2" Height="525" Width="689">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="66*"/>
+            <RowDefinition Height="181*"/>
+        </Grid.RowDefinitions>
+        <ComboBox x:Name="stateList" HorizontalAlignment="Left" Margin="110,22,0,0" VerticalAlignment="Top" Width="66" SelectionChanged="stateList_SelectionChanged" Height="26"/>
+        <ComboBox x:Name="cityList" HorizontalAlignment="Left" Height="26" Margin="270,22,0,0" VerticalAlignment="Top" Width="132" SelectionChanged="cityList_SelectionChanged"/>
+        <ComboBox x:Name="zipList" HorizontalAlignment="Left" Height="26" Margin="493,22,0,0" VerticalAlignment="Top" Width="132" SelectionChanged="zipList_SelectionChanged"/>
+        <ComboBox x:Name="categoryList" HorizontalAlignment="Left" Height="26" Margin="23,107,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="catagoryList_SelectionChanged" Grid.RowSpan="2"/>
+
+        <Label x:Name="label" Content="State:" HorizontalAlignment="Left" Margin="50,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.829,-0.769" Width="51"/>
+        <Label x:Name="label2" Content="Zip:" HorizontalAlignment="Left" Margin="449,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.829,-0.769" Width="37"/>
+        <Label x:Name="label3" Content="Categories:" HorizontalAlignment="Left" Margin="50,76,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.829,-0.769" Width="76"/>
+        <Label x:Name="label1" Content="City:" HorizontalAlignment="Left" Margin="221,22,0,0" VerticalAlignment="Top" Width="42"/>
+        <GroupBox x:Name="Businesses" Header="Businesses" HorizontalAlignment="Left" Margin="173,76,0,0" VerticalAlignment="Top" Height="382" Width="440" Grid.RowSpan="2">
+            <DataGrid x:Name="BusinessGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="327" Width="407"/>
+        </GroupBox>
+
+    </Grid>
+</Window>
