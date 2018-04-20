@@ -76,8 +76,8 @@ namespace Team37_Mile2
             BusinessGrid.Columns.Add(col1);
 
             DataGridTextColumn col2 = new DataGridTextColumn();
-            col2.Header = "State";
-            col2.Binding = new Binding("state_var");
+            col2.Header = "Address";
+            col2.Binding = new Binding("address");
             BusinessGrid.Columns.Add(col2);
 
             DataGridTextColumn col3 = new DataGridTextColumn();
@@ -86,13 +86,13 @@ namespace Team37_Mile2
             BusinessGrid.Columns.Add(col3);
 
             DataGridTextColumn col4 = new DataGridTextColumn();
-            col4.Header = "Address";
-            col4.Binding = new Binding("address");
+            col4.Header = "State";
+            col4.Binding = new Binding("state_var");
             BusinessGrid.Columns.Add(col4);
 
             DataGridTextColumn col5 = new DataGridTextColumn();
-            col5.Header = "Zip";
-            col5.Binding = new Binding("zip");
+            col5.Header = "Distance";
+            col5.Binding = new Binding("distance");
             BusinessGrid.Columns.Add(col5);
 
             DataGridTextColumn col6 = new DataGridTextColumn();
@@ -106,13 +106,13 @@ namespace Team37_Mile2
             BusinessGrid.Columns.Add(col7);
 
             DataGridTextColumn col8 = new DataGridTextColumn();
-            col8.Header = "Checkins";
-            col8.Binding = new Binding("num_checkins");
+            col8.Header = "Average Rating";
+            col8.Binding = new Binding("review_rating");
             BusinessGrid.Columns.Add(col8);
 
             DataGridTextColumn col9 = new DataGridTextColumn();
-            col9.Header = "Rating";
-            col9.Binding = new Binding("review_rating");
+            col9.Header = "Checkins";
+            col9.Binding = new Binding("num_checkins");
             BusinessGrid.Columns.Add(col9);
 
         }
@@ -180,14 +180,15 @@ namespace Team37_Mile2
                     using (var cmd = new NpgsqlCommand())
                     {
                         cmd.Connection = comm;
-                        cmd.CommandText = "SELECT * FROM business_table WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "';";
+                        //following commented out section only used in Milestone 2 also used as basic format for search button
+                        /*cmd.CommandText = "SELECT * FROM business_table WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "';";
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 BusinessGrid.Items.Add(new Business() { name = reader.GetString(1), state_var = reader.GetString(2), city = reader.GetString(3), stars = reader.GetDouble(6), zip = reader.GetString(8), address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
                             }
-                        }
+                        }*/
 
                         cmd.CommandText = "SELECT distinct category FROM business_category_table JOIN business_table ON business_category_table.business_id=business_table.business_id WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "';";
                         using (var reader = cmd.ExecuteReader())
@@ -232,6 +233,51 @@ namespace Team37_Mile2
                 }
             }
             else { }
+        }
+
+        private void Submit_Click(object sender, RoutedEventArgs e)
+        {
+            //utilize stringbuilder to build select statement based on the options selected
+            //each string builder will contain the section for WHERE clause 
+            StringBuilder sb_cat = new StringBuilder();
+            StringBuilder sb_att = new StringBuilder();
+            StringBuilder sb_price = new StringBuilder();//in attributes: make index for prices
+            StringBuilder sb_meal = new StringBuilder();//also in attributes: make index for meal
+            StringBuilder sb_open = new StringBuilder();
+            
+            using (var comm = new NpgsqlConnection(buildConnectString()))
+            {
+                comm.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder("SELECT B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B. FROM business_table as B ");
+                    if (sb_cat.Length > 0)
+                    {
+                         sql.Append("JOIN business_category_table ON business_table.business_id=business_category_table.business_id ");
+                    }
+                    if (sb_att.Length > 0)
+                    {
+                        sql.Append("JOIN business_attribute_table ON business_table.business_id=business_attribute_table.business_id ");
+                    }
+                    
+                    sql.Append("WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + " ");
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            BusinessGrid.Items.Add(new Business() { name = reader.GetString(1), state_var = reader.GetString(2), city = reader.GetString(3), stars = reader.GetDouble(6), zip = reader.GetString(8), address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
+                        }
+                    }
+                }
+                comm.Close();
+            }
+        }
+
+        //changes selected business at bottom of screen allowing checkin and addition of review
+        private void BusinessGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 
