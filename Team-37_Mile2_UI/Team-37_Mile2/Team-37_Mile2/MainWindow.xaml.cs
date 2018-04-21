@@ -269,6 +269,11 @@ namespace Team37_Mile2
             }
             //like the above for Filter by Attributes box and filter by meal box
 
+            if(day.SelectedIndex != 0)
+            {
+                sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
+            }
+
             using (var comm = new NpgsqlConnection(buildConnectString()))
             {
                 comm.Open();
@@ -290,6 +295,7 @@ namespace Team37_Mile2
                     {
                         sql.Append("JOIN hours_open_table as O ON B.business_id=O.business_id ");
                     }
+                    
                     
                     sql.Append("WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString()+"'");
                     

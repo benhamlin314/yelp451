@@ -11,8 +11,8 @@
             <TabItem Header="Business Search">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="41*"/>
-                        <RowDefinition Height="705*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="619*"/>
                     </Grid.RowDefinitions>
                     <Grid Margin="30,7,740,389" Grid.Row="1">
                         <ComboBox x:Name="stateList" HorizontalAlignment="Left" Margin="56,32,0,0" VerticalAlignment="Top" Width="66" SelectionChanged="stateList_SelectionChanged" Height="26"/>
@@ -28,8 +28,8 @@
 
                         <Label x:Name="label3" Content="Categories:" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-0.829,-0.769" Width="76"/>
                     </Grid>
-                    <GroupBox x:Name="Businesses" Header="Businesses" HorizontalAlignment="Left" Margin="216,75,0,0" VerticalAlignment="Top" Height="310" Width="462" Grid.Row="1">
-                        <DataGrid x:Name="BusinessGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="268" Width="431" SelectionChanged="BusinessGrid_SelectionChanged"/>
+                    <GroupBox x:Name="Businesses" Header="Businesses" HorizontalAlignment="Left" Margin="196,75,0,0" VerticalAlignment="Top" Height="310" Width="516" Grid.Row="1">
+                        <DataGrid x:Name="BusinessGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="268" Width="482" SelectionChanged="BusinessGrid_SelectionChanged"/>
                     </GroupBox>
                     <GroupBox x:Name="group_selected_cat" Header="Selected Categories:" HorizontalAlignment="Left" Height="188" Margin="22,341,0,0" Grid.Row="1" VerticalAlignment="Top" Width="162">
                         <ListBox x:Name="selected_categories" HorizontalAlignment="Left" Height="154" Margin="0,10,-2,0" VerticalAlignment="Top" Width="152"/>
@@ -41,7 +41,7 @@
 
                     </Grid>
                     <Button x:Name="Submit" Content="Search" HorizontalAlignment="Left" Margin="22,547,0,0" Grid.Row="1" VerticalAlignment="Top" Width="162" FontSize="14" FontWeight="Bold" Height="24" Click="Submit_Click"/>
-                    <GroupBox x:Name="group_bymeal" Header="Filter by Meal:" HorizontalAlignment="Left" Height="88" Margin="702,297,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
+                    <GroupBox x:Name="group_bymeal" Header="Filter by Meal:" HorizontalAlignment="Left" Height="88" Margin="717,297,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
                         <Grid Margin="0,0,0,-1">
                             <CheckBox x:Name="Breakfast" Content="Breakfast" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                             <CheckBox x:Name="Brunch" Content="Brunch" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top"/>
@@ -51,7 +51,7 @@
                             <CheckBox x:Name="Late_Night" Content="Late Night" HorizontalAlignment="Left" Margin="91,40,0,0" VerticalAlignment="Top"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Filter by Attribute:" HorizontalAlignment="Left" Height="234" Margin="702,41,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
+                    <GroupBox Header="Filter by Attribute:" HorizontalAlignment="Left" Height="234" Margin="717,43,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
                         <Grid>
                             <CheckBox x:Name="credit_cards" Content="Accepts Credit Cards" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top" Width="152"/>
                             <CheckBox x:Name="reservations" Content="Takes Reservations" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="152"/>
@@ -66,25 +66,107 @@
 
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Selected Business" HorizontalAlignment="Left" Height="172" Margin="216,399,0,0" Grid.Row="1" VerticalAlignment="Top" Width="462">
+                    <GroupBox Header="Selected Business" HorizontalAlignment="Left" Height="172" Margin="196,399,0,0" Grid.Row="1" VerticalAlignment="Top" Width="516">
                         <Grid>
-                            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="24" Margin="10,8,0,0" VerticalAlignment="Top" Width="306"/>
-                            <TextBlock x:Name="Name" HorizontalAlignment="Left" Margin="16,12,0,0" TextWrapping="Wrap" Text="Business Name" VerticalAlignment="Top" Width="293" Background="White" IsManipulationEnabled="False" />
-                            <Button x:Name="checkin" Content="Checkin" HorizontalAlignment="Left" Margin="329,8,0,0" VerticalAlignment="Top" Width="105" Background="#FF284CB0" FontWeight="Bold" Foreground="White"/>
-                            <TextBox x:Name="review" HorizontalAlignment="Left" Height="95" Margin="9,37,0,0" TextWrapping="Wrap" Text="&lt;New Review&gt;" VerticalAlignment="Top" Width="316"/>
-                            <Label Content="Rating:" HorizontalAlignment="Left" Margin="330,42,0,0" VerticalAlignment="Top" Width="63"/>
-                            <ComboBox x:Name="rating" HorizontalAlignment="Left" Margin="330,73,0,0" VerticalAlignment="Top" Width="104">
+                            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="24" Margin="10,8,0,0" VerticalAlignment="Top" Width="352"/>
+                            <TextBlock x:Name="Name" HorizontalAlignment="Left" Margin="16,12,0,0" TextWrapping="Wrap" Text="Business Name" VerticalAlignment="Top" Width="340" Background="White" IsManipulationEnabled="False" />
+                            <Button x:Name="checkin" Content="Checkin" HorizontalAlignment="Left" Margin="376,8,0,0" VerticalAlignment="Top" Width="105" Background="#FF284CB0" FontWeight="Bold" Foreground="White"/>
+                            <TextBox x:Name="review" HorizontalAlignment="Left" Height="95" Margin="9,37,0,0" TextWrapping="Wrap" Text="&lt;New Review&gt;" VerticalAlignment="Top" Width="353"/>
+                            <Label Content="Rating:" HorizontalAlignment="Left" Margin="377,42,0,0" VerticalAlignment="Top" Width="63"/>
+                            <ComboBox x:Name="rating" HorizontalAlignment="Left" Margin="377,73,0,0" VerticalAlignment="Top" Width="104">
                                 <Label Content="1" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <Label Content="2" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <Label Content="3" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <Label Content="4" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <Label Content="5" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             </ComboBox>
-                            <Button x:Name="submit_review" Content="Add Review" HorizontalAlignment="Left" Margin="330,112,0,0" VerticalAlignment="Top" Width="104" Background="#FF284CB0" FontWeight="Bold" Foreground="White" Click="submit_review_Click"/>
+                            <Button x:Name="submit_review" Content="Add Review" HorizontalAlignment="Left" Margin="377,112,0,0" VerticalAlignment="Top" Width="104" Background="#FF284CB0" FontWeight="Bold" Foreground="White" Click="submit_review_Click"/>
 
                         </Grid>
                     </GroupBox>
+                    <GroupBox Header="Sort by:" HorizontalAlignment="Left" Height="62" Margin="717,399,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
+                        <Grid Margin="0,0,0,-1">
+                            <ComboBox HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="152">
+                                <ListBoxItem Content="Name" IsSelected="True"/>
+                                <ListBoxItem Content="Stars"/>
+                                <ListBoxItem Content="Review Count"/>
+                                <ListBoxItem Content="Review Ratings"/>
+                                <ListBoxItem Content="Check-ins"/>
+                                <ListBoxItem Content="Nearest"/>
+                            </ComboBox>
 
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Open Businesses" HorizontalAlignment="Left" Height="65" Margin="196,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="516">
+                        <Grid>
+                            <Label Content="Day of Week:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="day" HorizontalAlignment="Left" Margin="90,12,0,0" VerticalAlignment="Top" Width="111">
+                                <ListBoxItem/>
+                                <ListBoxItem Content="Monday"/>
+                                <ListBoxItem Content="Tuesday"/>
+                                <ListBoxItem Content="Wednesday"/>
+                                <ListBoxItem Content="Thursday"/>
+                                <ListBoxItem Content="Friday"/>
+                                <ListBoxItem Content="Saturday"/>
+                                <ListBoxItem Content="Sunday"/>
+                            </ComboBox>
+                            <Label Content="From:" HorizontalAlignment="Left" Margin="237,10,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="opened" HorizontalAlignment="Left" Margin="277,12,0,0" VerticalAlignment="Top" Width="73">
+                                <ListBoxItem Content="0:00"/>
+                                <ListBoxItem Content="1:00"/>
+                                <ListBoxItem Content="2:00"/>
+                                <ListBoxItem Content="3:00"/>
+                                <ListBoxItem Content="4:00"/>
+                                <ListBoxItem Content="5:00"/>
+                                <ListBoxItem Content="6:00"/>
+                                <ListBoxItem Content="7:00"/>
+                                <ListBoxItem Content="8:00"/>
+                                <ListBoxItem Content="9:00"/>
+                                <ListBoxItem Content="10:00"/>
+                                <ListBoxItem Content="11:00"/>
+                                <ListBoxItem Content="12:00"/>
+                                <ListBoxItem Content="13:00"/>
+                                <ListBoxItem Content="14:00"/>
+                                <ListBoxItem Content="15:00"/>
+                                <ListBoxItem Content="16:00"/>
+                                <ListBoxItem Content="17:00"/>
+                                <ListBoxItem Content="18:00"/>
+                                <ListBoxItem Content="19:00"/>
+                                <ListBoxItem Content="20:00"/>
+                                <ListBoxItem Content="21:00"/>
+                                <ListBoxItem Content="22:00"/>
+                                <ListBoxItem Content="23:00"/>
+                            </ComboBox>
+                            <Label Content="To:" HorizontalAlignment="Left" Margin="386,10,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="closed" HorizontalAlignment="Left" Margin="411,12,0,0" VerticalAlignment="Top" Width="70">
+                                <ListBoxItem Content="0:00"/>
+                                <ListBoxItem Content="1:00"/>
+                                <ListBoxItem Content="2:00"/>
+                                <ListBoxItem Content="3:00"/>
+                                <ListBoxItem Content="4:00"/>
+                                <ListBoxItem Content="5:00"/>
+                                <ListBoxItem Content="6:00"/>
+                                <ListBoxItem Content="7:00"/>
+                                <ListBoxItem Content="8:00"/>
+                                <ListBoxItem Content="9:00"/>
+                                <ListBoxItem Content="10:00"/>
+                                <ListBoxItem Content="11:00"/>
+                                <ListBoxItem Content="12:00"/>
+                                <ListBoxItem Content="13:00"/>
+                                <ListBoxItem Content="14:00"/>
+                                <ListBoxItem Content="15:00"/>
+                                <ListBoxItem Content="16:00"/>
+                                <ListBoxItem Content="17:00"/>
+                                <ListBoxItem Content="18:00"/>
+                                <ListBoxItem Content="19:00"/>
+                                <ListBoxItem Content="20:00"/>
+                                <ListBoxItem Content="21:00"/>
+                                <ListBoxItem Content="22:00"/>
+                                <ListBoxItem Content="23:00"/>
+                            </ComboBox>
+
+                        </Grid>
+                    </GroupBox>
                 </Grid>
             </TabItem>
 
