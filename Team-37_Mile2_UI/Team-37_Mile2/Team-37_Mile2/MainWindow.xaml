@@ -24,20 +24,20 @@
                         <Label x:Name="label1" Content="City:" HorizontalAlignment="Left" Margin="0,65,0,0" VerticalAlignment="Top" Width="42"/>
                     </Grid>
                     <Grid Margin="30,203,740,305" Grid.Row="1">
-                        <ComboBox x:Name="categoryList" HorizontalAlignment="Left" Height="26" Margin="0,31,0,0" VerticalAlignment="Top" Width="134" SelectionChanged="catagoryList_SelectionChanged"/>
+                        <ComboBox x:Name="categoryList" HorizontalAlignment="Left" Height="26" Margin="0,31,0,0" VerticalAlignment="Top" Width="134"/>
 
                         <Label x:Name="label3" Content="Categories:" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-0.829,-0.769" Width="76"/>
                     </Grid>
-                    <GroupBox x:Name="Businesses" Header="Businesses" HorizontalAlignment="Left" Margin="216,75,0,0" VerticalAlignment="Top" Height="260" Width="462" Grid.Row="1">
-                        <DataGrid x:Name="BusinessGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="212" Width="431" SelectionChanged="BusinessGrid_SelectionChanged"/>
+                    <GroupBox x:Name="Businesses" Header="Businesses" HorizontalAlignment="Left" Margin="216,75,0,0" VerticalAlignment="Top" Height="310" Width="462" Grid.Row="1">
+                        <DataGrid x:Name="BusinessGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="268" Width="431" SelectionChanged="BusinessGrid_SelectionChanged"/>
                     </GroupBox>
                     <GroupBox x:Name="group_selected_cat" Header="Selected Categories:" HorizontalAlignment="Left" Height="188" Margin="22,341,0,0" Grid.Row="1" VerticalAlignment="Top" Width="162">
                         <ListBox x:Name="selected_categories" HorizontalAlignment="Left" Height="154" Margin="0,10,-2,0" VerticalAlignment="Top" Width="152"/>
 
                     </GroupBox>
                     <Grid Margin="30,287,740,251" Grid.Row="1">
-                        <Button x:Name="add_cat" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="51" Margin="5,10,0,0"/>
-                        <Button x:Name="remove_cat" Content="Remove" HorizontalAlignment="Left" Margin="70,10,0,0" VerticalAlignment="Top" Width="61"/>
+                        <Button x:Name="add_cat" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="51" Margin="5,10,0,0" Click="add_cat_Click"/>
+                        <Button x:Name="remove_cat" Content="Remove" HorizontalAlignment="Left" Margin="70,10,0,0" VerticalAlignment="Top" Width="61" Click="remove_cat_Click"/>
 
                     </Grid>
                     <Button x:Name="Submit" Content="Search" HorizontalAlignment="Left" Margin="22,547,0,0" Grid.Row="1" VerticalAlignment="Top" Width="162" FontSize="14" FontWeight="Bold" Height="24" Click="Submit_Click"/>
@@ -66,9 +66,30 @@
 
                         </Grid>
                     </GroupBox>
+                    <GroupBox Header="Selected Business" HorizontalAlignment="Left" Height="172" Margin="216,399,0,0" Grid.Row="1" VerticalAlignment="Top" Width="462">
+                        <Grid>
+                            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="24" Margin="10,8,0,0" VerticalAlignment="Top" Width="306"/>
+                            <TextBlock x:Name="Name" HorizontalAlignment="Left" Margin="16,12,0,0" TextWrapping="Wrap" Text="Business Name" VerticalAlignment="Top" Width="293" Background="White" IsManipulationEnabled="False" />
+                            <Button x:Name="checkin" Content="Checkin" HorizontalAlignment="Left" Margin="329,8,0,0" VerticalAlignment="Top" Width="105" Background="#FF284CB0" FontWeight="Bold" Foreground="White"/>
+                            <TextBox x:Name="review" HorizontalAlignment="Left" Height="95" Margin="9,37,0,0" TextWrapping="Wrap" Text="&lt;New Review&gt;" VerticalAlignment="Top" Width="316"/>
+                            <Label Content="Rating:" HorizontalAlignment="Left" Margin="330,42,0,0" VerticalAlignment="Top" Width="63"/>
+                            <ComboBox x:Name="rating" HorizontalAlignment="Left" Margin="330,73,0,0" VerticalAlignment="Top" Width="104">
+                                <Label Content="1" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <Label Content="2" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <Label Content="3" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <Label Content="4" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <Label Content="5" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            </ComboBox>
+                            <Button x:Name="submit_review" Content="Add Review" HorizontalAlignment="Left" Margin="330,112,0,0" VerticalAlignment="Top" Width="104" Background="#FF284CB0" FontWeight="Bold" Foreground="White" Click="submit_review_Click"/>
+
+                        </Grid>
+                    </GroupBox>
 
                 </Grid>
             </TabItem>
+
+
+
         </TabControl>
     </Grid>
 </Window>

@@ -27,12 +27,21 @@ namespace Team37_Mile2
             public string state_var { get; set; }
             public string city { get; set; }
             public double stars { get; set; }
-            public string zip { get; set; }
+            public double distance { get; set; }
+            public double bus_lat { get; set; }
+            public double bus_long { get; set; }
             public string address { get; set; }
             public int review_count { get; set; }
             public int num_checkins { get; set; }
             public double review_rating { get; set; }
+
+            public double calc_dist(double latitude, double longitude)
+            {
+                return Math.Abs(Math.Sqrt(Math.Pow(bus_lat - latitude, 2) + Math.Pow(bus_long - longitude, 2)));
+            }
         }
+
+        
 
         public MainWindow()
         {
@@ -209,7 +218,8 @@ namespace Team37_Mile2
             }
         }
 
-        private void catagoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //remove this event catagories only added by add button
+        /*private void catagoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BusinessGrid.Items.Clear();
             if (!(categoryList.SelectedIndex == -1))
@@ -233,10 +243,11 @@ namespace Team37_Mile2
                 }
             }
             else { }
-        }
+        }*/
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
+            BusinessGrid.Items.Clear();
             //utilize stringbuilder to build select statement based on the options selected
             //each string builder will contain the section for WHERE clause 
             StringBuilder sb_cat = new StringBuilder();
@@ -245,28 +256,69 @@ namespace Team37_Mile2
             StringBuilder sb_meal = new StringBuilder();//also in attributes: make index for meal
             StringBuilder sb_open = new StringBuilder();
             
+            //build each string here
+
+            for(int i = selected_categories.Items.Count; i > 0; i--)//builds category string
+            {
+                sb_cat.Append(" AND category = '" + selected_categories.Items[i-1] + "'");
+            }
+
+            if (credit_cards.IsChecked == true)
+            {
+                sb_att.Append(" AND A.attribute_name = 'Accepts Credit Cards' AND A.val = 'TRUE'");
+            }
+            //like the above for Filter by Attributes box and filter by meal box
+
             using (var comm = new NpgsqlConnection(buildConnectString()))
             {
                 comm.Open();
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = comm;
-                    StringBuilder sql = new StringBuilder("SELECT B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B. FROM business_table as B ");
+                    StringBuilder sql = new StringBuilder("SELECT B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B.latitude, B.longitude FROM business_table as B ");
+
+                    //adds join statements as needed
                     if (sb_cat.Length > 0)
                     {
-                         sql.Append("JOIN business_category_table ON business_table.business_id=business_category_table.business_id ");
+                         sql.Append("JOIN business_category_table as C ON B.business_id=C.business_id ");
                     }
                     if (sb_att.Length > 0)
                     {
-                        sql.Append("JOIN business_attribute_table ON business_table.business_id=business_attribute_table.business_id ");
+                        sql.Append("JOIN business_attribute_table as A ON B.business_id=A.business_id ");
+                    }
+                    if (sb_open.Length > 0)
+                    {
+                        sql.Append("JOIN hours_open_table as O ON B.business_id=O.business_id ");
                     }
                     
-                    sql.Append("WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + " ");
+                    sql.Append("WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString()+"'");
+                    
+                    //add other strings to sql statement here
+                    if (sb_cat.Length > 0) { sql.Append(" " + sb_cat.ToString()); }
+                    if (sb_att.Length > 0) { sql.Append(" " + sb_att.ToString()); }
+                    if (sb_meal.Length > 0) { sql.Append(" " + sb_meal.ToString()); }
+                    if (sb_open.Length > 0) { sql.Append(" " + sb_open.ToString()); }
+                    if (sb_price.Length > 0) { sql.Append(" " + sb_price.ToString()); }
+
+                    sql.Append(";");//adds semicolon to end of sql statement
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            BusinessGrid.Items.Add(new Business() { name = reader.GetString(1), state_var = reader.GetString(2), city = reader.GetString(3), stars = reader.GetDouble(6), zip = reader.GetString(8), address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
+                            Business temp = new Business();
+                            temp.name = reader.GetString(0);
+                            temp.address = reader.GetString(1);
+                            temp.city = reader.GetString(2);
+                            temp.state_var = reader.GetString(3);
+                            temp.stars = reader.GetDouble(4);
+                            temp.review_count = reader.GetInt32(5);
+                            temp.review_rating = reader.GetDouble(6);
+                            temp.bus_lat = reader.GetDouble(7);
+                            temp.bus_long = reader.GetDouble(8);
+                            //temp.distance = temp.calc_dist()//needs user long and lat to calculate
+                            //BusinessGrid.Items.Add(new Business() { name = reader.GetString(0), state_var = reader.GetString(1), city = reader.GetString(2), stars = reader.GetDouble(3), distance = , address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
+                            BusinessGrid.Items.Add(temp);//adds record to display
                         }
                     }
                 }
@@ -277,7 +329,42 @@ namespace Team37_Mile2
         //changes selected business at bottom of screen allowing checkin and addition of review
         private void BusinessGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            Business tempbus = (Business)BusinessGrid.SelectedItem;
+            Name.Text = tempbus.name;
+        }
 
+        //adds review using user info and filled out info. check for empty review text
+        private void submit_review_Click(object sender, RoutedEventArgs e)
+        {
+            using (var comm = new NpgsqlConnection(buildConnectString()))
+            {
+                comm.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    //cmd.CommandText = "SELECT business_table.* FROM business_table JOIN business_category_table ON business_table.business_id=business_category_table.business_id WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "' AND category ='" + categoryList.SelectedItem.ToString() + "';";
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //BusinessGrid.Items.Add(new Business() { name = reader.GetString(1), state_var = reader.GetString(2), city = reader.GetString(3), stars = reader.GetDouble(6), zip = reader.GetString(8), address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
+                        }
+                    }
+                }
+                comm.Close();
+            }
+        }
+
+        //adds selected category to list
+        private void add_cat_Click(object sender, RoutedEventArgs e)
+        {
+            selected_categories.Items.Add(categoryList.SelectedItem);
+        }
+
+        //removes selected cetegory from list
+        private void remove_cat_Click(object sender, RoutedEventArgs e)
+        {
+            selected_categories.Items.Remove(selected_categories.SelectedItem);
         }
     }
 
