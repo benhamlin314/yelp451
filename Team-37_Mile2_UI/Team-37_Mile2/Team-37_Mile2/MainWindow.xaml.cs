@@ -535,6 +535,37 @@ namespace Team37_Mile2
                 //No city was selected - show an error window?
             }
         }
+
+        private void button_CurrentUserSearch_Click(object sender, RoutedEventArgs e)
+        {
+            //Get the name entered by the user.
+            string name = textBox_CurrentUser.Text;
+
+            //Clear all of the tables.
+            // -- TODO --
+
+            using (var comm = new NpgsqlConnection(buildConnectString()))
+            {
+                comm.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder("SELECT U.user_id FROM user_table as U ");
+                    sql.Append("WHERE name ='" + name + "';");
+
+
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            listBox_CurrentUserIDMatch.Items.Add(reader.GetString(0));//adds record to display
+                        }
+                    }
+                }
+                comm.Close();
+            }
+        }
     }
    
 }
