@@ -49,7 +49,8 @@ namespace Team37_Mile2
         {
             InitializeComponent();
             addStates();
-            addColumnsToGrid();
+            addColumnsToBusinessGrid();
+            addColumnsToTipGrid();
         }
 
         private string buildConnectString()
@@ -79,7 +80,7 @@ namespace Team37_Mile2
             }
         }
 
-        public void addColumnsToGrid()
+        public void addColumnsToBusinessGrid()
         {
             DataGridTextColumn col1 = new DataGridTextColumn();
             col1.Header = "Business Name";
@@ -126,6 +127,32 @@ namespace Team37_Mile2
             col9.Header = "Checkins";
             col9.Binding = new Binding("num_checkins");
             BusinessGrid.Columns.Add(col9);
+
+        }
+
+        public void addColumnsToTipGrid()
+        {
+            DataGridTextColumn col1 = new DataGridTextColumn();
+            col1.Header = "User Name";
+            col1.Binding = new Binding("user_name");
+            TipGrid.Columns.Add(col1);
+
+            DataGridTextColumn col2 = new DataGridTextColumn();
+            col2.Header = "Business Name";
+            col2.Binding = new Binding("business_name");
+            col2.Width = 255;
+            TipGrid.Columns.Add(col2);
+
+            DataGridTextColumn col3 = new DataGridTextColumn();
+            col3.Header = "City";
+            col3.Binding = new Binding("city");
+            TipGrid.Columns.Add(col3);
+
+            DataGridTextColumn col4 = new DataGridTextColumn();
+            col4.Header = "Text";
+            col4.Binding = new Binding("text");
+            col4.Width = DataGridLength.Auto;
+            TipGrid.Columns.Add(col4);
 
         }
 
@@ -458,7 +485,6 @@ namespace Team37_Mile2
 
                         using (var reader = cmd.ExecuteReader())
                         {
-                            //List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
                             while (reader.Read())
                             {
                                 //For each result, create a dynamic object that stores all of the data we need
@@ -541,9 +567,6 @@ namespace Team37_Mile2
             //Get the name entered by the user.
             string name = textBox_CurrentUser.Text;
 
-            //Clear all of the tables.
-            // -- TODO --
-
             using (var comm = new NpgsqlConnection(buildConnectString()))
             {
                 comm.Open();
@@ -563,6 +586,67 @@ namespace Team37_Mile2
                         }
                     }
                 }
+                comm.Close();
+            }
+        }
+
+        private void listBox_CurrentUserIDMatch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Get the ID clicked on by the user.
+            string id = listBox_CurrentUserIDMatch.SelectedItem.ToString();
+
+            //Clear all of the tables.
+            // -- TODO -- 
+            TipGrid.Items.Clear();
+
+            using (var comm = new NpgsqlConnection(buildConnectString()))
+            {
+                comm.Open();
+
+                //Run query for user's info
+
+
+                //Run query for user's friends
+
+
+                //Run query for user's friends' reviews
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder(@"
+                        SELECT F.name AS user_name, business_table.name AS business_name, business_table.city, review_table.text FROM 
+                            (SELECT * FROM friendship_table 
+                            JOIN user_table ON friendship_table.friend2_id=user_table.user_id 
+                            WHERE friend1_id='" + id + @"') 
+                        AS F JOIN review_table ON F.user_id=review_table.user_id 
+                        JOIN business_table ON business_table.business_id=review_table.business_id;");
+
+
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //For each result, create a dynamic object that stores all of the data we need
+                            //  from the database.
+                            dynamic obj = new ExpandoObject();
+
+                            obj.user_name = reader.GetString(0);
+                            obj.business_name = reader.GetString(1);
+                            obj.city = reader.GetString(2);
+                            obj.text = reader.GetString(3);
+
+
+                            TipGrid.Items.Add(obj);//adds record to display
+                        }
+                    }
+                }
+
+                foreach (dynamic i in TipGrid.Items)
+                {
+                    Console.WriteLine(i.user_name);
+                }
+
                 comm.Close();
             }
         }

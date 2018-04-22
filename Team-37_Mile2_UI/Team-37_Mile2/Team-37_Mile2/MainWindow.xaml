@@ -17,7 +17,7 @@
                         <Grid HorizontalAlignment="Left" Height="90" Margin="0,0,0,0" VerticalAlignment="Top" Width="300">
                             <TextBox x:Name="textBox_CurrentUser" HorizontalAlignment="Left" Height="23" Margin="4,4,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="170"/>
                             <Button x:Name="button_CurrentUserSearch" Content="Search" HorizontalAlignment="Left" VerticalAlignment="Top" Width="52" Margin="179,4,0,0" Height="23" Click="button_CurrentUserSearch_Click"/>
-                            <ListBox x:Name="listBox_CurrentUserIDMatch" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="290" Margin="4,32,0,-6"/>
+                            <ListBox x:Name="listBox_CurrentUserIDMatch" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="290" Margin="4,32,0,-6" SelectionChanged="listBox_CurrentUserIDMatch_SelectionChanged"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox x:Name="groupBox_UserInformation" Header="User Information" HorizontalAlignment="Left" Height="124" VerticalAlignment="Top" Margin="333,5.6,0,0" Grid.Row="1" Width="310">
@@ -66,7 +66,7 @@
                     <GroupBox x:Name="groupBox_Tips" Header="Tips by Friends" HorizontalAlignment="Left" Height="475" VerticalAlignment="Top" Margin="280,134.6,0,0" Grid.Row="1" Width="632">
                         <Grid HorizontalAlignment="Left" Height="465" VerticalAlignment="Top" Width="622" Margin="0,0,-2.8,-12.2">
                             <Label x:Name="label_Tips" Content="Latest tips posted by the user's friends" HorizontalAlignment="Left" Margin="0,2,0,0" VerticalAlignment="Top"/>
-                            <DataGrid x:Name="dataGrid1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="427" Width="620" Margin="2,28,0,0"/>
+                            <DataGrid x:Name="TipGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Height="427" Width="620" Margin="2,28,0,0"/>
 
                         </Grid>
                     </GroupBox>
