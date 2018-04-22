@@ -52,7 +52,8 @@ namespace Team37_Mile2
 
         private string buildConnectString()
         {
-            return "Server=localhost; Port=5432; Username=postgres; Password=1234; Database=yelp451";
+            //-- DEBUG -- (Jared: my postgres user has a different password, not sure how to change it)
+            return "Server=localhost; Port=5432; Username=postgres; Password=password; Database=yelp451";
         }
 
         public void addStates()
@@ -269,7 +270,8 @@ namespace Team37_Mile2
             }
             //like the above for Filter by Attributes box and filter by meal box
 
-            if(day.SelectedIndex != 0)
+            //If a day isn't specified, we ignore it - SelectedIndex is -1 in this case
+            if(day.SelectedIndex != -1)
             {
                 sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
             }
@@ -372,7 +374,51 @@ namespace Team37_Mile2
         {
             selected_categories.Items.Remove(selected_categories.SelectedItem);
         }
-    }
 
-    
+        private void buttonCheckin_Click(object sender, RoutedEventArgs e)
+        {
+            //Make the graph window, but don't display it yet.
+            GraphWindow win2 = new GraphWindow();
+
+            //Make a connection to the database to get the checkin data.
+            using (var comm = new NpgsqlConnection(buildConnectString()))
+            {
+                comm.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+
+                    //-- DEBUG --
+                    //Console.WriteLine((MainWindow)sender
+
+                    //cmd.CommandText = "SELECT business_table.* FROM business_table JOIN business_category_table ON business_table.business_id=business_category_table.business_id WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "' AND category ='" + categoryList.SelectedItem.ToString() + "';";
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //BusinessGrid.Items.Add(new Business() { name = reader.GetString(1), state_var = reader.GetString(2), city = reader.GetString(3), stars = reader.GetDouble(6), zip = reader.GetString(8), address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
+                        }
+                    }
+                }
+                comm.Close();
+            }
+
+
+
+            win2.Show();
+        }
+
+        private void buttonReviews_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void buttonNumBusinessPerZip_Click(object sender, RoutedEventArgs e)
+        {
+            GraphWindow win2 = new GraphWindow();
+            win2.Show();
+        }
+    }
+   
 }

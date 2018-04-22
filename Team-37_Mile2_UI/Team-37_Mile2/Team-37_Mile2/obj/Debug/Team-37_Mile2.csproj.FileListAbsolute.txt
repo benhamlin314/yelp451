@@ -62,3 +62,25 @@ D:\Github\yelp451\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37
 D:\Github\yelp451\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2.csproj.CoreCompileInputs.cache
 D:\Github\yelp451\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2.exe
 D:\Github\yelp451\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2.pdb
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\Team-37_Mile2.exe.config
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2.exe
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2.pdb
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\Team-37_Mile2.exe
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\Team-37_Mile2.pdb
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\Npgsql.dll
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\Npgsql.xml
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2.csprojResolveAssemblyReference.cache
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\MainWindow.baml
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\MainWindow.g.cs
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\App.g.cs
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2_MarkupCompile.cache
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2.g.resources
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Hamlin_Mile1.Properties.Resources.resources
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2.csproj.GenerateResource.Cache
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\System.Windows.Controls.Input.Toolkit.dll
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\System.Windows.Controls.Layout.Toolkit.dll
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\WPFToolkit.dll
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\GraphWindow.g.cs
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2_MarkupCompile.lref
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\GraphWindow.baml
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll

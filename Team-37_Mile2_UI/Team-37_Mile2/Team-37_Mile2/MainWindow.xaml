@@ -97,6 +97,7 @@
 
                         </Grid>
                     </GroupBox>
+
                     <GroupBox Header="Open Businesses" HorizontalAlignment="Left" Height="65" Margin="196,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="516">
                         <Grid>
                             <Label Content="Day of Week:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
@@ -166,6 +167,14 @@
                             </ComboBox>
 
                         </Grid>
+                    </GroupBox>
+                    <GroupBox x:Name="groupBox" Header="GroupBox" HorizontalAlignment="Left" Margin="717,465.6,0,0" Grid.Row="1" VerticalAlignment="Top" Height="105" Width="184">
+                        <Grid HorizontalAlignment="Left" Height="70" Margin="5,10,0,0" VerticalAlignment="Top" Width="165">
+                            <Button x:Name="buttonCheckin" Content="Show Checkins" HorizontalAlignment="Left" VerticalAlignment="Top" Width="165" Height="21" Margin="0,-3,0,0" Click="buttonCheckin_Click"/>
+                            <Button x:Name="buttonReviews" Content="Show Reviews" HorizontalAlignment="Left" Margin="0,24,0,0" VerticalAlignment="Top" Width="165" Height="20" Click="buttonReviews_Click"/>
+                            <Button x:Name="buttonNumBusinessPerZip" Content="# of Businesses per Zipcode" HorizontalAlignment="Left" Margin="0,50,0,0" VerticalAlignment="Top" Width="165" Height="20" Click="buttonNumBusinessPerZip_Click"/>
+                        </Grid>
+
                     </GroupBox>
                 </Grid>
             </TabItem>
