@@ -499,7 +499,7 @@ namespace Team37_Mile2
                         List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
                         while (reader.Read())
                         {
-                            //For each result, add the value pair to the graph window.
+                            //For each result, add the value pair to the list that we'll pass to the graph window.
                             dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(2)));
                         }
 
