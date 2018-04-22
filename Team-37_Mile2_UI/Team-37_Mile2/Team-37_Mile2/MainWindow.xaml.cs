@@ -51,6 +51,7 @@ namespace Team37_Mile2
             addStates();
             addColumnsToBusinessGrid();
             addColumnsToTipGrid();
+            addColumnsToFriendGrid();
         }
 
         private string buildConnectString()
@@ -153,6 +154,42 @@ namespace Team37_Mile2
             col4.Binding = new Binding("text");
             col4.Width = DataGridLength.Auto;
             TipGrid.Columns.Add(col4);
+
+        }
+
+        public void addColumnsToFriendGrid()
+        {
+            DataGridTextColumn col1 = new DataGridTextColumn();
+            col1.Header = "Name";
+            col1.Binding = new Binding("name");
+            //col1.Width = 255;
+            FriendGrid.Columns.Add(col1);
+
+            DataGridTextColumn col2 = new DataGridTextColumn();
+            col2.Header = "Average Stars";
+            col2.Binding = new Binding("average_stars");
+            FriendGrid.Columns.Add(col2);
+
+            DataGridTextColumn col3 = new DataGridTextColumn();
+            col3.Header = "Yelping Since";
+            col3.Binding = new Binding("yelping_since");
+            FriendGrid.Columns.Add(col3);
+
+            DataGridTextColumn col4 = new DataGridTextColumn();
+            col4.Header = "Funny";
+            col4.Binding = new Binding("funny");
+            col4.Width = DataGridLength.Auto;
+            FriendGrid.Columns.Add(col4);
+
+            DataGridTextColumn col5 = new DataGridTextColumn();
+            col5.Header = "Cool";
+            col5.Binding = new Binding("cool");
+            FriendGrid.Columns.Add(col5);
+
+            DataGridTextColumn col6 = new DataGridTextColumn();
+            col6.Header = "Useful";
+            col6.Binding = new Binding("useful");
+            FriendGrid.Columns.Add(col6);
 
         }
 
@@ -614,10 +651,61 @@ namespace Team37_Mile2
                 comm.Open();
 
                 //Run query for user's info
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder(@"
+                        SELECT name, average_stars, fans, yelping_since, funny, cool, useful FROM user_table
+                        WHERE user_table.user_id='" + id + "';");
 
+
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            textBox_UserInformationName.Text = reader.GetString(0);
+                            textBox_UserInformationStars.Text = reader.GetDouble(1).ToString();
+                            textBox_UserInformationFans.Text = reader.GetInt32(2).ToString();
+                            textBox_UserInformationYelpingSince.Text = reader.GetString(3);
+                            textBox_UserInformationVotesFunny.Text = reader.GetInt32(4).ToString();
+                            textBox_UserInformationVotesCool.Text = reader.GetInt32(5).ToString();
+                            textBox_UserInformationVotesUseful.Text = reader.GetInt32(6).ToString();
+                        }
+                    }
+                }
 
                 //Run query for user's friends
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder(@"
+                        SELECT user_table.name, user_table.average_stars, user_table.yelping_since, user_table.funny, user_table.cool, user_table.useful FROM friendship_table
+                        JOIN user_table ON user_table.user_id=friendship_table.friend2_id
+                        WHERE friend1_id='" + id + "';");
 
+
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //For each result, create a dynamic object that stores all of the data we need
+                            //  from the database.
+                            dynamic obj = new ExpandoObject();
+
+                            obj.name = reader.GetString(0);
+                            obj.average_stars = reader.GetDouble(1).ToString();
+                            obj.yelping_since = reader.GetString(2);
+                            obj.funny = reader.GetInt32(3).ToString();
+                            obj.cool = reader.GetInt32(4).ToString();
+                            obj.useful = reader.GetInt32(5).ToString();
+
+
+                            FriendGrid.Items.Add(obj);//adds record to display
+                        }
+                    }
+                }
 
                 //Run query for user's friends' reviews
                 using (var cmd = new NpgsqlCommand())
