@@ -20,12 +20,55 @@
                             <ListBox x:Name="listBox_CurrentUserIDMatch" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="290" Margin="4,32,0,-6"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox x:Name="groupBox_UserInformation" Header="User Information" HorizontalAlignment="Left" Height="124" VerticalAlignment="Top" Margin="333,5.6,0,0" Grid.Row="1" Width="310"/>
-                    <GroupBox x:Name="groupBox_UserLocation" Header="Set User Location" HorizontalAlignment="Left" Height="124" VerticalAlignment="Top" Margin="657,5.6,0,0" Grid.Row="1" Width="255"/>
+                    <GroupBox x:Name="groupBox_UserInformation" Header="User Information" HorizontalAlignment="Left" Height="124" VerticalAlignment="Top" Margin="333,5.6,0,0" Grid.Row="1" Width="310">
+                        <Grid HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="300" Margin="0,0,-2.4,0">
+                            <Label x:Name="label_UserInformationName" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,5,0,0"/>
+                            <TextBox x:Name="textBox_UserInformationName" HorizontalAlignment="Left" Height="17" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="113" Margin="61,10,0,0"/>
 
-                    <GroupBox x:Name="groupBox_Friends" Header="Friends" HorizontalAlignment="Left" Height="475" VerticalAlignment="Top" Margin="10,134.6,0,0" Grid.Row="1" Width="255"/>
+                            <Label x:Name="label_UserInformationStars" Content="Stars" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,25,0,0"/>
+                            <TextBox x:Name="textBox_UserInformationStars" HorizontalAlignment="Left" Height="17" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="113" Margin="61,30,0,0"/>
+
+                            <Label x:Name="label_UserInformationFans" Content="Fans" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,44,0,0"/>
+                            <TextBox x:Name="textBox_UserInformationFans" HorizontalAlignment="Left" Height="17" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="113" Margin="61,49,0,0"/>
+
+                            <Label x:Name="label_UserInformationYelpingSince" Content="Yelping Since" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,64,0,0"/>
+                            <TextBox x:Name="textBox_UserInformationYelpingSince" HorizontalAlignment="Left" Height="17" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="74" Margin="100,69,0,0"/>
+
+
+                            <Label x:Name="label_UserInformationVotesTitle" Content="Votes" FontSize="9" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="182,5,0,0"/>
+
+                            <Label x:Name="label_UserInformationVotesFunny" Content="Funny" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="190,20,0,0"/>
+                            <TextBox x:Name="textBox_UserInformationVotesFunny" HorizontalAlignment="Left" Height="17" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48" Margin="242,25,0,0"/>
+
+                            <Label x:Name="label_UserInformationVotesCool" Content="Cool" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="191,40,0,0"/>
+                            <TextBox x:Name="textBox_UserInformationVotesCool" HorizontalAlignment="Left" Height="17" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48" Margin="242,45,0,0"/>
+
+                            <Label x:Name="label_UserInformationVotesUseful" Content="Useful" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="191,60,0,0"/>
+                            <TextBox x:Name="textBox_UserInformationVotesUseful" HorizontalAlignment="Left" Height="17" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48" Margin="242,65,0,0"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox x:Name="groupBox_UserLocation" Header="Set User Location" HorizontalAlignment="Left" Height="124" VerticalAlignment="Top" Margin="657,5.6,0,0" Grid.Row="1" Width="255">
+                        <Grid HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="245" Margin="0,0,-2.6,0">
+                            <Label x:Name="label_UserLocationLatitude" Content="Latitude" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,11,0,0"/>
+                            <TextBox x:Name="textBox_UserLocationLatitude" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="130" Margin="89,10,0,0"/>
+
+                            <Label x:Name="label_UserLocationLongitude" Content="Longitude" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,36,0,0"/>
+                            <TextBox x:Name="textBox_UserLocationLongitude" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="130" Margin="89,40,0,0"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox x:Name="groupBox_Friends" Header="Friends" HorizontalAlignment="Left" Height="475" VerticalAlignment="Top" Margin="10,134.6,0,0" Grid.Row="1" Width="255">
+                        <Grid HorizontalAlignment="Left" Height="453" VerticalAlignment="Top" Width="245" Margin="0,0,-2.6,-0.2">
+                            <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Height="415" Width="245" Margin="0,5,0,0"/>
+
+                        </Grid>
+                    </GroupBox>
                     <GroupBox x:Name="groupBox_Tips" Header="Tips by Friends" HorizontalAlignment="Left" Height="475" VerticalAlignment="Top" Margin="280,134.6,0,0" Grid.Row="1" Width="632">
-                        <Label x:Name="label_Tips" Content="Latest tips posted by the user's friends" HorizontalAlignment="Left" Margin="2,2,0,0" VerticalAlignment="Top"/>
+                        <Grid HorizontalAlignment="Left" Height="465" VerticalAlignment="Top" Width="622" Margin="0,0,-2.8,-12.2">
+                            <Label x:Name="label_Tips" Content="Latest tips posted by the user's friends" HorizontalAlignment="Left" Margin="0,2,0,0" VerticalAlignment="Top"/>
+                            <DataGrid x:Name="dataGrid1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="427" Width="620" Margin="2,28,0,0"/>
+
+                        </Grid>
                     </GroupBox>
                 </Grid>
             </TabItem>
