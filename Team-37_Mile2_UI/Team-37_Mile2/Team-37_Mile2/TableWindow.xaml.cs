@@ -44,8 +44,17 @@ namespace Team37_Mile2
 
             DataGridTextColumn col4 = new DataGridTextColumn();
             col4.Header = "Text";
+
+            //Set the rows to adjust their height to allow the review text to wordwrap.
+            //Referenced: https://stackoverflow.com/questions/44507929/wpf-datagrid-how-to-set-specifc-setter-in-c-sharp-in-stead-of-xaml
+            //  and https://msdn.microsoft.com/en-us/library/system.windows.controls.textblock.textwrapping(v=vs.110).aspx
+            Style newStyle = new Style(typeof(TextBlock));
+            newStyle.Setters.Add(new Setter(TextBlock.TextWrappingProperty, TextWrapping.Wrap));
+            col4.ElementStyle = newStyle;
+
             col4.Binding = new Binding("text");
-            col4.Width = 255;
+            //col4.Width = DataGridLength.Auto; //causes the width to extend to however long needed to fit all of the text on one line.
+            col4.Width = 550;
             ReviewGrid.Columns.Add(col4);
 
         }
