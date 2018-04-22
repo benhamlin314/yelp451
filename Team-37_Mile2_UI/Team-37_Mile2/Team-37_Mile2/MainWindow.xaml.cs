@@ -383,10 +383,13 @@ namespace Team37_Mile2
             GraphWindow win2 = new GraphWindow();
 
             Business selectedBusiness = new Business();
+            //If the user has selected a business in the GUI...
             if (this.BusinessGrid.SelectedItem != null)
             {
                 selectedBusiness = (Business)this.BusinessGrid.SelectedItem;
 
+                //Replace the placeholder '[Business Name]' text with the business' name.
+                win2.checkinChart.Title = win2.checkinChart.Title.ToString().Replace("[Business Name]", selectedBusiness.name);
 
 
                 using (var comm = new NpgsqlConnection(buildConnectString()))
@@ -416,15 +419,15 @@ namespace Team37_Mile2
                     }
                     comm.Close();
                 }
+
+                //Show() must go after SetChart() - if not, this (fairly strange) exception is thrown:
+                //    "Cannot modify the logical children for this node at this time because a tree walk is in progress" 
+                win2.Show();
             }
             else
             {
                 //No business was clicked - show an error window?
             }
-
-            //Show must go after SetChart() - if not, this (fairly strange) exception is thrown:
-            //"Cannot modify the logical children for this node at this time because a tree walk is in progress" 
-            win2.Show();
         }
 
         private void buttonReviews_Click(object sender, RoutedEventArgs e)
@@ -434,8 +437,52 @@ namespace Team37_Mile2
 
         private void buttonNumBusinessPerZip_Click(object sender, RoutedEventArgs e)
         {
+            //Make the graph window, but don't display it yet.
             GraphWindow win2 = new GraphWindow();
-            win2.Show();
+
+            string selectedCity;
+            //If the user has selected a business in the GUI...
+            if (this.cityList.SelectedItem != null)
+            {
+                selectedCity = this.cityList.SelectedItem.ToString();
+
+                //Replace the placeholder '[Business Name]' text with the business' name.
+                win2.checkinChart.Title = win2.checkinChart.Title.ToString().Replace("[Business Name]", selectedCity);
+
+
+                using (var comm = new NpgsqlConnection(buildConnectString()))
+                {
+                    comm.Open();
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+
+                        cmd.CommandText = "SELECT postal_code, COUNT(business_id) FROM business_table WHERE city = '" + selectedCity + "' GROUP BY postal_code;";
+
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
+                            while (reader.Read())
+                            {
+                                //For each result, add the value pair to the list that we'll pass to the graph window.
+                                dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(1)));
+                            }
+
+                            win2.SetChart(dataList);
+                        }
+                    }
+                    comm.Close();
+                }
+
+                //Show() must go after SetChart() - if not, this (fairly strange) exception is thrown:
+                //    "Cannot modify the logical children for this node at this time because a tree walk is in progress" 
+                win2.Show();
+            }
+            else
+            {
+                //No city was selected - show an error window?
+            }
         }
     }
    

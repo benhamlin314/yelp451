@@ -9,11 +9,11 @@
         Title="GraphWindow" Height="600" Width="800">
     <Grid>
         <ScrollViewer HorizontalAlignment="Left" Height="535" Margin="10,15,0,0" VerticalAlignment="Top" Width="775">
-            <chartingToolkit:Chart Title="Test chart." Name="checkinChart">
+            <chartingToolkit:Chart Title="Checkins per day for [Business Name]" Name="checkinChart">
                 <chartingToolkit:Chart.DataContext>
                     <PointCollection></PointCollection>
                 </chartingToolkit:Chart.DataContext>
-                <chartingToolkit:ColumnSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}"/>
+                <chartingToolkit:ColumnSeries Title="# of Checkins" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}"/>
             </chartingToolkit:Chart>
         </ScrollViewer>
     </Grid>
