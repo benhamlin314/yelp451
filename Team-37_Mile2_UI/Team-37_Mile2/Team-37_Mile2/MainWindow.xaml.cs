@@ -23,6 +23,7 @@ namespace Team37_Mile2
     {
         public class Business
         {
+            public string bus_id { get; set; }
             public string name { get; set; }
             public string state_var { get; set; }
             public string city { get; set; }
@@ -282,7 +283,7 @@ namespace Team37_Mile2
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = comm;
-                    StringBuilder sql = new StringBuilder("SELECT B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B.latitude, B.longitude FROM business_table as B ");
+                    StringBuilder sql = new StringBuilder("SELECT B.business_id, B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B.latitude, B.longitude FROM business_table as B ");
 
                     //adds join statements as needed
                     if (sb_cat.Length > 0)
@@ -315,15 +316,16 @@ namespace Team37_Mile2
                         while (reader.Read())
                         {
                             Business temp = new Business();
-                            temp.name = reader.GetString(0);
-                            temp.address = reader.GetString(1);
-                            temp.city = reader.GetString(2);
-                            temp.state_var = reader.GetString(3);
-                            temp.stars = reader.GetDouble(4);
-                            temp.review_count = reader.GetInt32(5);
-                            temp.review_rating = reader.GetDouble(6);
-                            temp.bus_lat = reader.GetDouble(7);
-                            temp.bus_long = reader.GetDouble(8);
+                            temp.bus_id = reader.GetString(0);
+                            temp.name = reader.GetString(1);
+                            temp.address = reader.GetString(2);
+                            temp.city = reader.GetString(3);
+                            temp.state_var = reader.GetString(4);
+                            temp.stars = reader.GetDouble(5);
+                            temp.review_count = reader.GetInt32(6);
+                            temp.review_rating = reader.GetDouble(7);
+                            temp.bus_lat = reader.GetDouble(8);
+                            temp.bus_long = reader.GetDouble(9);
                             //temp.distance = temp.calc_dist()//needs user long and lat to calculate
                             //BusinessGrid.Items.Add(new Business() { name = reader.GetString(0), state_var = reader.GetString(1), city = reader.GetString(2), stars = reader.GetDouble(3), distance = , address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
                             BusinessGrid.Items.Add(temp);//adds record to display
@@ -380,133 +382,44 @@ namespace Team37_Mile2
             //Make the graph window, but don't display it yet.
             GraphWindow win2 = new GraphWindow();
 
-            //Save the list of 'business_id's to a list for later.
-            List<string> businessIDList = new List<string>();
-
-            //----------------------------------
-            //All of this is a copy of the Submit button code, except for
-            //    - what we're SELECTing (the IDs)
-            //    - what we're doing with the data (instead of making Business
-            //        objects and adding them to the Data Grid on the Main Window,
-            //        we're just holding on to the reader object and then making
-            //        a second request where we take the results of the first and
-            //        grab the checkin counts WHERE the id is one of those returned
-            //        above.
-            //
-            //This should probably all be split into functions, but trying to figure
-            //    out how made my head hurt and ultimately seemed like a bad idea
-            //    for the time being.
-            //----------------------------------
-
-            //utilize stringbuilder to build select statement based on the options selected
-            //each string builder will contain the section for WHERE clause 
-            StringBuilder sb_cat = new StringBuilder();
-            StringBuilder sb_att = new StringBuilder();
-            StringBuilder sb_price = new StringBuilder();//in attributes: make index for prices
-            StringBuilder sb_meal = new StringBuilder();//also in attributes: make index for meal
-            StringBuilder sb_open = new StringBuilder();
-
-            //build each string here
-
-            for (int i = selected_categories.Items.Count; i > 0; i--)//builds category string
+            Business selectedBusiness = new Business();
+            if (this.BusinessGrid.SelectedItem != null)
             {
-                sb_cat.Append(" AND category = '" + selected_categories.Items[i - 1] + "'");
-            }
+                selectedBusiness = (Business)this.BusinessGrid.SelectedItem;
 
-            if (credit_cards.IsChecked == true)
-            {
-                sb_att.Append(" AND A.attribute_name = 'Accepts Credit Cards' AND A.val = 'TRUE'");
-            }
-            //like the above for Filter by Attributes box and filter by meal box
 
-            //If a day isn't specified, we ignore it - SelectedIndex is -1 in this case
-            if (day.SelectedIndex != -1)
-            {
-                sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
-            }
 
-            using (var comm = new NpgsqlConnection(buildConnectString()))
-            {
-                comm.Open();
-                using (var cmd = new NpgsqlCommand())
+                using (var comm = new NpgsqlConnection(buildConnectString()))
                 {
-                    cmd.Connection = comm;
-                    //Only grab the IDs this time.
-                    StringBuilder sql = new StringBuilder("SELECT B.business_id FROM business_table as B ");
-
-                    //adds join statements as needed
-                    if (sb_cat.Length > 0)
+                    comm.Open();
+                    using (var cmd = new NpgsqlCommand())
                     {
-                        sql.Append("JOIN business_category_table as C ON B.business_id=C.business_id ");
-                    }
-                    if (sb_att.Length > 0)
-                    {
-                        sql.Append("JOIN business_attribute_table as A ON B.business_id=A.business_id ");
-                    }
-                    if (sb_open.Length > 0)
-                    {
-                        sql.Append("JOIN hours_open_table as O ON B.business_id=O.business_id ");
-                    }
+                        cmd.Connection = comm;
 
-
-                    sql.Append("WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "'");
-
-                    //add other strings to sql statement here
-                    if (sb_cat.Length > 0) { sql.Append(" " + sb_cat.ToString()); }
-                    if (sb_att.Length > 0) { sql.Append(" " + sb_att.ToString()); }
-                    if (sb_meal.Length > 0) { sql.Append(" " + sb_meal.ToString()); }
-                    if (sb_open.Length > 0) { sql.Append(" " + sb_open.ToString()); }
-                    if (sb_price.Length > 0) { sql.Append(" " + sb_price.ToString()); }
-
-                    sql.Append(";");//adds semicolon to end of sql statement
-                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
-
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            //For each ID returned, add it to the list of IDs.
-                            businessIDList.Add(reader.GetString(0));
-                        }
-                    }
-                }
-
-                using (var cmd = new NpgsqlCommand())
-                {
-                    cmd.Connection = comm;
-
-                    cmd.CommandText = "SELECT business_table.name, checkin_table.business_id, COUNT(day_var) FROM business_table JOIN checkin_table ON business_table.business_id=checkin_table.business_id GROUP BY business_table.name, checkin_table.business_id";
-
-                    if (businessIDList.Count > 0)
-                    {
+                        cmd.CommandText = "SELECT business_table.name, checkin_table.business_id, day_var, SUM(count_var) FROM business_table JOIN checkin_table ON business_table.business_id=checkin_table.business_id GROUP BY business_table.name, checkin_table.business_id, day_var";
                         cmd.CommandText += " HAVING ";
 
-                        foreach (string i in businessIDList)
+                        cmd.CommandText += "checkin_table.business_id = '" + selectedBusiness.bus_id + "';";
+
+
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            cmd.CommandText += "checkin_table.business_id = '" + i + "' OR ";
+                            List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
+                            while (reader.Read())
+                            {
+                                //For each result, add the value pair to the list that we'll pass to the graph window.
+                                dataList.Add(new KeyValuePair<string, int>(reader.GetString(2), reader.GetInt32(3)));
+                            }
+
+                            win2.SetChart(dataList);
                         }
-
-                        cmd.CommandText = cmd.CommandText.Remove(cmd.CommandText.Length - 4);
-                        cmd.CommandText += ";";
                     }
-                    
-
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
-                        while (reader.Read())
-                        {
-                            //For each result, add the value pair to the list that we'll pass to the graph window.
-                            dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(2)));
-                        }
- 
-                        win2.SetChart(dataList);
-                    }
+                    comm.Close();
                 }
-
-                comm.Close();
+            }
+            else
+            {
+                //No business was clicked - show an error window?
             }
 
             //Show must go after SetChart() - if not, this (fairly strange) exception is thrown:
