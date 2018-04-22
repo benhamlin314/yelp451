@@ -595,9 +595,19 @@ namespace Team37_Mile2
             //Get the ID clicked on by the user.
             string id = listBox_CurrentUserIDMatch.SelectedItem.ToString();
 
-            //Clear all of the tables.
-            // -- TODO -- 
+            //Clear all of the info tables and text boxes.
+            FriendGrid.Items.Clear();
             TipGrid.Items.Clear();
+            textBox_UserInformationName.Clear();
+            textBox_UserInformationStars.Clear();
+            textBox_UserInformationFans.Clear();
+            textBox_UserInformationYelpingSince.Clear();
+            textBox_UserInformationVotesFunny.Clear();
+            textBox_UserInformationVotesCool.Clear();
+            textBox_UserInformationVotesUseful.Clear();
+            textBox_UserLocationLatitude.Clear();
+            textBox_UserLocationLongitude.Clear();
+
 
             using (var comm = new NpgsqlConnection(buildConnectString()))
             {
@@ -640,11 +650,6 @@ namespace Team37_Mile2
                             TipGrid.Items.Add(obj);//adds record to display
                         }
                     }
-                }
-
-                foreach (dynamic i in TipGrid.Items)
-                {
-                    Console.WriteLine(i.user_name);
                 }
 
                 comm.Close();
