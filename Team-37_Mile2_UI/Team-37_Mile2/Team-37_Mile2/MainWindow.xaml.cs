@@ -379,7 +379,6 @@ namespace Team37_Mile2
         {
             //Make the graph window, but don't display it yet.
             GraphWindow win2 = new GraphWindow();
-            win2.Show();
 
             //Save the list of 'business_id's to a list for later.
             List<string> businessIDList = new List<string>();
@@ -499,22 +498,20 @@ namespace Team37_Mile2
                         List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
                         while (reader.Read())
                         {
-                            if (dataList.Count < 10)
-                            {
-                                //For each result, add the value pair to the list that we'll pass to the graph window.
-                                dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(2)));
-                            }
+                            //For each result, add the value pair to the list that we'll pass to the graph window.
+                            dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(2)));
                         }
-
-                        //This doesn't work - throws a bizarre exception with little information online
-                        //"Cannot modify the logical children for this node at this time because a tree walk is in progress" 
+ 
                         win2.SetChart(dataList);
                     }
                 }
 
-
                 comm.Close();
             }
+
+            //Show must go after SetChart() - if not, this (fairly strange) exception is thrown:
+            //"Cannot modify the logical children for this node at this time because a tree walk is in progress" 
+            win2.Show();
         }
 
         private void buttonReviews_Click(object sender, RoutedEventArgs e)

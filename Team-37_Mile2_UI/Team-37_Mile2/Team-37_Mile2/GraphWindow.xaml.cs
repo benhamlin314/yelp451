@@ -26,13 +26,6 @@ namespace Team37_Mile2
 
         public void SetChart(List<KeyValuePair<string, int>> data) {
             this.checkinChart.DataContext = data;
-
-            // -- DEBUG --
-            /*List<KeyValuePair<string, int>> myChartData = new List<KeyValuePair<string, int>>();
-            myChartData.Add(new KeyValuePair<string, int>("Sun", 50));
-
-            this.checkinChart.DataContext = myChartData;*/
-
         }
     }
 }
