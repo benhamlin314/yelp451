@@ -498,7 +498,7 @@ namespace Team37_Mile2
                 selectedCity = this.cityList.SelectedItem.ToString();
 
                 //Replace the placeholder '[Business Name]' text with the business' name.
-                win2.checkinChart.Title = win2.checkinChart.Title.ToString().Replace("[Business Name]", selectedCity);
+                win2.checkinChart.Title = "Number of Businesses per Zipcode for " + selectedCity;
 
 
                 using (var comm = new NpgsqlConnection(buildConnectString()))
