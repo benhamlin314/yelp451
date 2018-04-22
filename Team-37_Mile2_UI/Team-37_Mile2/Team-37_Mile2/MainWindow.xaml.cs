@@ -499,12 +499,16 @@ namespace Team37_Mile2
                         List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
                         while (reader.Read())
                         {
-                            //For each result, add the value pair to the list that we'll pass to the graph window.
-                            dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(2)));
+                            if (dataList.Count < 10)
+                            {
+                                //For each result, add the value pair to the list that we'll pass to the graph window.
+                                dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(2)));
+                            }
                         }
 
-                        //This doesn't work right now - an exception is thrown.
-                        win2.checkinChart.DataContext = dataList;
+                        //This doesn't work - throws a bizarre exception with little information online
+                        //"Cannot modify the logical children for this node at this time because a tree walk is in progress" 
+                        win2.SetChart(dataList);
                     }
                 }
 

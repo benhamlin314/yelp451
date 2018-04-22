@@ -13,7 +13,7 @@
                 <chartingToolkit:Chart.DataContext>
                     <PointCollection></PointCollection>
                 </chartingToolkit:Chart.DataContext>
-                <chartingToolkit:ColumnSeries DependentValuePath="X" IndependentValuePath="Y" ItemsSource="{Binding}"/>
+                <chartingToolkit:ColumnSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}"/>
             </chartingToolkit:Chart>
         </ScrollViewer>
     </Grid>
