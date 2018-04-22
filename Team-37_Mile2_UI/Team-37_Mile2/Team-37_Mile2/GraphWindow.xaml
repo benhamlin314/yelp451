@@ -9,9 +9,9 @@
         Title="GraphWindow" Height="600" Width="800">
     <Grid>
         <ScrollViewer HorizontalAlignment="Left" Height="535" Margin="10,15,0,0" VerticalAlignment="Top" Width="775">
-            <chartingToolkit:Chart Title="Test chart.">
+            <chartingToolkit:Chart Title="Test chart." Name="checkinChart">
                 <chartingToolkit:Chart.DataContext>
-                    <PointCollection>1,10 2, 85</PointCollection>
+                    <PointCollection></PointCollection>
                 </chartingToolkit:Chart.DataContext>
                 <chartingToolkit:ColumnSeries DependentValuePath="X" IndependentValuePath="Y" ItemsSource="{Binding}"/>
             </chartingToolkit:Chart>

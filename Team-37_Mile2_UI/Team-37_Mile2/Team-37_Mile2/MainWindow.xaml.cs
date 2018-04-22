@@ -379,39 +379,143 @@ namespace Team37_Mile2
         {
             //Make the graph window, but don't display it yet.
             GraphWindow win2 = new GraphWindow();
+            win2.Show();
 
-            //Make a connection to the database to get the checkin data.
+            //Save the list of 'business_id's to a list for later.
+            List<string> businessIDList = new List<string>();
+
+            //----------------------------------
+            //All of this is a copy of the Submit button code, except for
+            //    - what we're SELECTing (the IDs)
+            //    - what we're doing with the data (instead of making Business
+            //        objects and adding them to the Data Grid on the Main Window,
+            //        we're just holding on to the reader object and then making
+            //        a second request where we take the results of the first and
+            //        grab the checkin counts WHERE the id is one of those returned
+            //        above.
+            //
+            //This should probably all be split into functions, but trying to figure
+            //    out how made my head hurt and ultimately seemed like a bad idea
+            //    for the time being.
+            //----------------------------------
+
+            //utilize stringbuilder to build select statement based on the options selected
+            //each string builder will contain the section for WHERE clause 
+            StringBuilder sb_cat = new StringBuilder();
+            StringBuilder sb_att = new StringBuilder();
+            StringBuilder sb_price = new StringBuilder();//in attributes: make index for prices
+            StringBuilder sb_meal = new StringBuilder();//also in attributes: make index for meal
+            StringBuilder sb_open = new StringBuilder();
+
+            //build each string here
+
+            for (int i = selected_categories.Items.Count; i > 0; i--)//builds category string
+            {
+                sb_cat.Append(" AND category = '" + selected_categories.Items[i - 1] + "'");
+            }
+
+            if (credit_cards.IsChecked == true)
+            {
+                sb_att.Append(" AND A.attribute_name = 'Accepts Credit Cards' AND A.val = 'TRUE'");
+            }
+            //like the above for Filter by Attributes box and filter by meal box
+
+            //If a day isn't specified, we ignore it - SelectedIndex is -1 in this case
+            if (day.SelectedIndex != -1)
+            {
+                sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
+            }
+
             using (var comm = new NpgsqlConnection(buildConnectString()))
             {
                 comm.Open();
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = comm;
+                    //Only grab the IDs this time.
+                    StringBuilder sql = new StringBuilder("SELECT B.business_id FROM business_table as B ");
 
-                    //-- DEBUG --
-                    //Console.WriteLine((MainWindow)sender
+                    //adds join statements as needed
+                    if (sb_cat.Length > 0)
+                    {
+                        sql.Append("JOIN business_category_table as C ON B.business_id=C.business_id ");
+                    }
+                    if (sb_att.Length > 0)
+                    {
+                        sql.Append("JOIN business_attribute_table as A ON B.business_id=A.business_id ");
+                    }
+                    if (sb_open.Length > 0)
+                    {
+                        sql.Append("JOIN hours_open_table as O ON B.business_id=O.business_id ");
+                    }
 
-                    //cmd.CommandText = "SELECT business_table.* FROM business_table JOIN business_category_table ON business_table.business_id=business_category_table.business_id WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "' AND category ='" + categoryList.SelectedItem.ToString() + "';";
+
+                    sql.Append("WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "'");
+
+                    //add other strings to sql statement here
+                    if (sb_cat.Length > 0) { sql.Append(" " + sb_cat.ToString()); }
+                    if (sb_att.Length > 0) { sql.Append(" " + sb_att.ToString()); }
+                    if (sb_meal.Length > 0) { sql.Append(" " + sb_meal.ToString()); }
+                    if (sb_open.Length > 0) { sql.Append(" " + sb_open.ToString()); }
+                    if (sb_price.Length > 0) { sql.Append(" " + sb_price.ToString()); }
+
+                    sql.Append(";");//adds semicolon to end of sql statement
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+
 
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            //BusinessGrid.Items.Add(new Business() { name = reader.GetString(1), state_var = reader.GetString(2), city = reader.GetString(3), stars = reader.GetDouble(6), zip = reader.GetString(8), address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
+                            //For each ID returned, add it to the list of IDs.
+                            businessIDList.Add(reader.GetString(0));
                         }
                     }
                 }
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+
+                    cmd.CommandText = "SELECT business_table.name, checkin_table.business_id, COUNT(day_var) FROM business_table JOIN checkin_table ON business_table.business_id=checkin_table.business_id GROUP BY business_table.name, checkin_table.business_id";
+
+                    if (businessIDList.Count > 0)
+                    {
+                        cmd.CommandText += " HAVING ";
+
+                        foreach (string i in businessIDList)
+                        {
+                            cmd.CommandText += "checkin_table.business_id = '" + i + "' OR ";
+                        }
+
+                        cmd.CommandText = cmd.CommandText.Remove(cmd.CommandText.Length - 4);
+                        cmd.CommandText += ";";
+                    }
+                    
+
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
+                        while (reader.Read())
+                        {
+                            //For each result, add the value pair to the graph window.
+                            dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(2)));
+                        }
+
+                        //This doesn't work right now - an exception is thrown.
+                        win2.checkinChart.DataContext = dataList;
+                    }
+                }
+
+
                 comm.Close();
             }
-
-
-
-            win2.Show();
         }
 
         private void buttonReviews_Click(object sender, RoutedEventArgs e)
         {
-
+            //show a TableWindow
         }
 
         private void buttonNumBusinessPerZip_Click(object sender, RoutedEventArgs e)
