@@ -34,6 +34,7 @@ namespace Team37_Mile2
             public int review_count { get; set; }
             public int num_checkins { get; set; }
             public double review_rating { get; set; }
+            public string id { get; set; }
 
             public double calc_dist(double latitude, double longitude)
             {
@@ -269,7 +270,9 @@ namespace Team37_Mile2
             }
             //like the above for Filter by Attributes box and filter by meal box
 
-            if(day.SelectedIndex != 0)
+
+
+            if(day.SelectedIndex != 0)//works with set up of "10:00-20:00"
             {
                 sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
             }
@@ -280,7 +283,7 @@ namespace Team37_Mile2
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = comm;
-                    StringBuilder sql = new StringBuilder("SELECT B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B.latitude, B.longitude FROM business_table as B ");
+                    StringBuilder sql = new StringBuilder("SELECT B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B.latitude, B.longitude, B.business_id FROM business_table as B ");
 
                     //adds join statements as needed
                     if (sb_cat.Length > 0)
@@ -322,9 +325,12 @@ namespace Team37_Mile2
                             temp.review_rating = reader.GetDouble(6);
                             temp.bus_lat = reader.GetDouble(7);
                             temp.bus_long = reader.GetDouble(8);
+                            temp.id = reader.GetString(9);
                             //temp.distance = temp.calc_dist()//needs user long and lat to calculate
-                            //BusinessGrid.Items.Add(new Business() { name = reader.GetString(0), state_var = reader.GetString(1), city = reader.GetString(2), stars = reader.GetDouble(3), distance = , address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
                             BusinessGrid.Items.Add(temp);//adds record to display
+
+
+                            //BusinessGrid.Items.Add(new Business() { name = reader.GetString(0), state_var = reader.GetString(1), city = reader.GetString(2), stars = reader.GetDouble(3), distance = , address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
                         }
                     }
                 }
@@ -373,6 +379,4 @@ namespace Team37_Mile2
             selected_categories.Items.Remove(selected_categories.SelectedItem);
         }
     }
-
-    
 }
