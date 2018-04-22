@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Npgsql;
+using System.Dynamic;
 
 namespace Team37_Mile2
 {
@@ -432,7 +433,57 @@ namespace Team37_Mile2
 
         private void buttonReviews_Click(object sender, RoutedEventArgs e)
         {
-            //show a TableWindow
+            //Make the table window, but don't display it yet.
+            TableWindow win2 = new TableWindow();
+
+            Business selectedBusiness = new Business();
+            //If the user has selected a business in the GUI...
+            if (this.BusinessGrid.SelectedItem != null)
+            {
+                selectedBusiness = (Business)this.BusinessGrid.SelectedItem;
+
+
+                using (var comm = new NpgsqlConnection(buildConnectString()))
+                {
+                    comm.Open();
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+
+                        cmd.CommandText = "SELECT review_table.date, user_table.name, review_table.stars, review_table.text FROM business_table JOIN review_table ON review_table.business_id=business_table.business_id JOIN user_table ON user_table.user_id=review_table.user_id";
+                        cmd.CommandText += " WHERE ";
+
+                        cmd.CommandText += "business_table.business_id = '" + selectedBusiness.bus_id + "';";
+
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            //List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
+                            while (reader.Read())
+                            {
+                                //For each result, create a dynamic object that stores all of the data we need
+                                //  from the database.
+                                dynamic obj = new ExpandoObject();
+
+                                obj.date = reader.GetString(0);
+                                obj.name = reader.GetString(1);
+                                obj.stars = reader.GetInt32(2);
+                                obj.text = reader.GetString(3);
+
+                                //Add the object to the table.
+                                win2.ReviewGrid.Items.Add(obj);
+                            }
+                        }
+                    }
+                    comm.Close();
+                }
+
+                win2.Show();
+            }
+            else
+            {
+                //No business was clicked - show an error window?
+            }
         }
 
         private void buttonNumBusinessPerZip_Click(object sender, RoutedEventArgs e)

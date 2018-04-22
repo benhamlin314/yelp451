@@ -84,3 +84,5 @@ C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2
 C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\Team-37_Mile2_MarkupCompile.lref
 C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\GraphWindow.baml
 C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\TableWindow.g.cs
+C:\Users\Jared\Documents\WSU\Cpts 451\Git Project\Team-37_Mile2_UI\Team-37_Mile2\Team-37_Mile2\obj\Debug\TableWindow.baml
