@@ -8,7 +8,7 @@
         Title="TableWindow" Height="600" Width="800">
     <Grid>
         <ScrollViewer HorizontalAlignment="Left" Height="550" Margin="10,10,0,0" VerticalAlignment="Top" Width="774" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible">
-            <DataGrid x:Name="ReviewGrid"/>
+            <DataGrid x:Name="ReviewGrid" IsReadOnly="True"/>
         </ScrollViewer>
 
     </Grid>
