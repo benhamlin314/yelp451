@@ -264,17 +264,56 @@ namespace Team37_Mile2
                 sb_cat.Append(" AND category = '" + selected_categories.Items[i-1] + "'");
             }
 
+            //if()
+
             if (credit_cards.IsChecked == true)
             {
-                sb_att.Append(" AND A.attribute_name = 'Accepts Credit Cards' AND A.val = 'TRUE'");
+                sb_att.Append(" AND (A.attribute_name = 'BusinessAcceptsCreditCards' AND A.val = 'true')");
             }
             //like the above for Filter by Attributes box and filter by meal box
-
-
-
-            if(day.SelectedIndex != 0)//works with set up of "10:00-20:00"
+            if (reservations.IsChecked == true)
             {
-                sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
+                sb_att.Append(" AND (A.attribute_name = 'RestrauntsReservations' AND A.val = 'true')");
+            }
+            if (wheelchair.IsChecked == true)
+            {
+                sb_att.Append(" AND (A.attribute_name = 'WheelchairAccessible' AND A.val = 'true')");
+            }
+            if (outdoor_seat.IsChecked == true)
+            {
+                sb_att.Append(" AND (A.attribute_name = 'OutdoorSeating' AND A.val = 'true')");
+            }
+            if (kid_friendly.IsChecked == true)
+            {
+                sb_att.Append(" AND (A.attribute_name = 'GoodForKids' AND A.val = 'true')");
+            }
+            if (group_friendly.IsChecked == true)
+            {
+                sb_att.Append(" AND (A.attribute_name = 'RestaurantsGoodForGroups' AND A.val = 'true')");
+            }
+            if (delivery.IsChecked == true)
+            {
+                sb_att.Append(" AND (A.attribute_name = 'RestaurantsDelivery' AND A.val = 'true')");
+            }
+            if (takeout.IsChecked == true)
+            {
+                sb_att.Append(" AND (A.attribute_name = 'RestaurantsTakeOut' AND A.val = 'true')");
+            }
+            if (wifi.IsChecked == true)
+            {
+                sb_att.Append(" AND (A.attribute_name = 'WiFi' AND A.val = 'true')");
+            }
+            if (bikeparking.IsChecked == true)
+            {
+                sb_att.Append(" AND (A.attribute_name = 'BikeParking' AND A.val = 'true')");
+            }
+
+            if(day != null)//works with set up of "10:00-20:00"
+            {
+                if (opened != null && closed != null)
+                {
+                    sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
+                }
             }
 
             using (var comm = new NpgsqlConnection(buildConnectString()))
@@ -326,7 +365,7 @@ namespace Team37_Mile2
                             temp.bus_lat = reader.GetDouble(7);
                             temp.bus_long = reader.GetDouble(8);
                             temp.id = reader.GetString(9);
-                            //temp.distance = temp.calc_dist()//needs user long and lat to calculate
+                            //temp.distance = temp.calc_dist(usr_lat,usr_long);//needs user long and lat to calculate
                             BusinessGrid.Items.Add(temp);//adds record to display
 
 
