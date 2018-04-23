@@ -23,6 +23,7 @@ namespace Team37_Mile2
     {
         public class Business
         {
+            public string bus_id { get; set; }
             public string name { get; set; }
             public string state_var { get; set; }
             public string city { get; set; }
@@ -34,7 +35,6 @@ namespace Team37_Mile2
             public int review_count { get; set; }
             public int num_checkins { get; set; }
             public double review_rating { get; set; }
-            public string id { get; set; }
 
             public double calc_dist(double latitude, double longitude)
             {
@@ -42,18 +42,42 @@ namespace Team37_Mile2
             }
         }
 
-        
+        public class Review
+        {
+            public String date { get; set; }
+            public String user_name { get; set; }
+            public int stars { get; set; }
+            public string text { get; set; }
+
+            public string business_name { get; set; }
+            public string city { get; set; }
+        }
+
+        public class User
+        {
+            public string user_id { get; set; }
+            public string name { get; set; }
+            public double average_stars { get; set; }
+            public string yelping_since { get; set; }
+            public int funny { get; set; }
+            public int cool { get; set; }
+            public int useful { get; set; }
+        }
+
 
         public MainWindow()
         {
             InitializeComponent();
             addStates();
-            addColumnsToGrid();
+            addColumnsToBusinessGrid();
+            addColumnsToTipGrid();
+            addColumnsToFriendGrid();
         }
 
         private string buildConnectString()
         {
-            return "Server=localhost; Port=5432; Username=postgres; Password=1234; Database=yelp451";
+            //-- DEBUG -- (Jared: my postgres user has a different password, not sure how to change it)
+            return "Server=localhost; Port=5432; Username=postgres; Password=password; Database=yelp451";
         }
 
         public void addStates()
@@ -77,7 +101,7 @@ namespace Team37_Mile2
             }
         }
 
-        public void addColumnsToGrid()
+        public void addColumnsToBusinessGrid()
         {
             DataGridTextColumn col1 = new DataGridTextColumn();
             col1.Header = "Business Name";
@@ -124,6 +148,68 @@ namespace Team37_Mile2
             col9.Header = "Checkins";
             col9.Binding = new Binding("num_checkins");
             BusinessGrid.Columns.Add(col9);
+
+        }
+
+        public void addColumnsToTipGrid()
+        {
+            DataGridTextColumn col1 = new DataGridTextColumn();
+            col1.Header = "User Name";
+            col1.Binding = new Binding("user_name");
+            TipGrid.Columns.Add(col1);
+
+            DataGridTextColumn col2 = new DataGridTextColumn();
+            col2.Header = "Business Name";
+            col2.Binding = new Binding("business_name");
+            col2.Width = 255;
+            TipGrid.Columns.Add(col2);
+
+            DataGridTextColumn col3 = new DataGridTextColumn();
+            col3.Header = "City";
+            col3.Binding = new Binding("city");
+            TipGrid.Columns.Add(col3);
+
+            DataGridTextColumn col4 = new DataGridTextColumn();
+            col4.Header = "Text";
+            col4.Binding = new Binding("text");
+            col4.Width = DataGridLength.Auto;
+            TipGrid.Columns.Add(col4);
+
+        }
+
+        public void addColumnsToFriendGrid()
+        {
+            DataGridTextColumn col1 = new DataGridTextColumn();
+            col1.Header = "Name";
+            col1.Binding = new Binding("name");
+            //col1.Width = 255;
+            FriendGrid.Columns.Add(col1);
+
+            DataGridTextColumn col2 = new DataGridTextColumn();
+            col2.Header = "Average Stars";
+            col2.Binding = new Binding("average_stars");
+            FriendGrid.Columns.Add(col2);
+
+            DataGridTextColumn col3 = new DataGridTextColumn();
+            col3.Header = "Yelping Since";
+            col3.Binding = new Binding("yelping_since");
+            FriendGrid.Columns.Add(col3);
+
+            DataGridTextColumn col4 = new DataGridTextColumn();
+            col4.Header = "Funny";
+            col4.Binding = new Binding("funny");
+            col4.Width = DataGridLength.Auto;
+            FriendGrid.Columns.Add(col4);
+
+            DataGridTextColumn col5 = new DataGridTextColumn();
+            col5.Header = "Cool";
+            col5.Binding = new Binding("cool");
+            FriendGrid.Columns.Add(col5);
+
+            DataGridTextColumn col6 = new DataGridTextColumn();
+            col6.Header = "Useful";
+            col6.Binding = new Binding("useful");
+            FriendGrid.Columns.Add(col6);
 
         }
 
@@ -250,13 +336,13 @@ namespace Team37_Mile2
         {
             BusinessGrid.Items.Clear();
             //utilize stringbuilder to build select statement based on the options selected
-            //each string builder will contain the section for WHERE clause 
+            //each string builder will contain the section for WHERE clause
             StringBuilder sb_cat = new StringBuilder();
             StringBuilder sb_att = new StringBuilder();
             StringBuilder sb_price = new StringBuilder();//in attributes: make index for prices
             StringBuilder sb_meal = new StringBuilder();//also in attributes: make index for meal
             StringBuilder sb_open = new StringBuilder();
-            
+
             //build each string here
 
             for(int i = selected_categories.Items.Count; i > 0; i--)//builds category string
@@ -322,7 +408,7 @@ namespace Team37_Mile2
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = comm;
-                    StringBuilder sql = new StringBuilder("SELECT B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B.latitude, B.longitude, B.business_id FROM business_table as B ");
+                    StringBuilder sql = new StringBuilder("SELECT B.business_id, B.name, B.address, B.city, B.state_var, B.stars, B.review_count, B.review_rating, B.latitude, B.longitude FROM business_table as B ");
 
                     //adds join statements as needed
                     if (sb_cat.Length > 0)
@@ -337,10 +423,10 @@ namespace Team37_Mile2
                     {
                         sql.Append("JOIN hours_open_table as O ON B.business_id=O.business_id ");
                     }
-                    
-                    
+
+
                     sql.Append("WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString()+"'");
-                    
+
                     //add other strings to sql statement here
                     if (sb_cat.Length > 0) { sql.Append(" " + sb_cat.ToString()); }
                     if (sb_att.Length > 0) { sql.Append(" " + sb_att.ToString()); }
@@ -355,17 +441,18 @@ namespace Team37_Mile2
                         while (reader.Read())
                         {
                             Business temp = new Business();
-                            temp.name = reader.GetString(0);
-                            temp.address = reader.GetString(1);
-                            temp.city = reader.GetString(2);
-                            temp.state_var = reader.GetString(3);
-                            temp.stars = reader.GetDouble(4);
-                            temp.review_count = reader.GetInt32(5);
-                            temp.review_rating = reader.GetDouble(6);
-                            temp.bus_lat = reader.GetDouble(7);
-                            temp.bus_long = reader.GetDouble(8);
-                            temp.id = reader.GetString(9);
-                            //temp.distance = temp.calc_dist(usr_lat,usr_long);//needs user long and lat to calculate
+                            temp.bus_id = reader.GetString(0);
+                            temp.name = reader.GetString(1);
+                            temp.address = reader.GetString(2);
+                            temp.city = reader.GetString(3);
+                            temp.state_var = reader.GetString(4);
+                            temp.stars = reader.GetDouble(5);
+                            temp.review_count = reader.GetInt32(6);
+                            temp.review_rating = reader.GetDouble(7);
+                            temp.bus_lat = reader.GetDouble(8);
+                            temp.bus_long = reader.GetDouble(9);
+                            //temp.distance = temp.calc_dist()//needs user long and lat to calculate
+                            //BusinessGrid.Items.Add(new Business() { name = reader.GetString(0), state_var = reader.GetString(1), city = reader.GetString(2), stars = reader.GetDouble(3), distance = , address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
                             BusinessGrid.Items.Add(temp);//adds record to display
 
 
@@ -417,5 +504,340 @@ namespace Team37_Mile2
         {
             selected_categories.Items.Remove(selected_categories.SelectedItem);
         }
+
+        private void buttonCheckin_Click(object sender, RoutedEventArgs e)
+        {
+            //Make the graph window, but don't display it yet.
+            GraphWindow win2 = new GraphWindow();
+
+            Business selectedBusiness = new Business();
+            //If the user has selected a business in the GUI...
+            if (this.BusinessGrid.SelectedItem != null)
+            {
+                selectedBusiness = (Business)this.BusinessGrid.SelectedItem;
+
+                //Replace the placeholder '[Business Name]' text with the business' name.
+                win2.checkinChart.Title = win2.checkinChart.Title.ToString().Replace("[Business Name]", selectedBusiness.name);
+
+
+                using (var comm = new NpgsqlConnection(buildConnectString()))
+                {
+                    comm.Open();
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+
+                        cmd.CommandText = "SELECT business_table.name, checkin_table.business_id, day_var, SUM(count_var) FROM business_table JOIN checkin_table ON business_table.business_id=checkin_table.business_id GROUP BY business_table.name, checkin_table.business_id, day_var";
+                        cmd.CommandText += " HAVING ";
+
+                        cmd.CommandText += "checkin_table.business_id = '" + selectedBusiness.bus_id + "';";
+
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
+                            while (reader.Read())
+                            {
+                                //For each result, add the value pair to the list that we'll pass to the graph window.
+                                dataList.Add(new KeyValuePair<string, int>(reader.GetString(2), reader.GetInt32(3)));
+                            }
+
+                            win2.SetChart(dataList);
+                        }
+                    }
+                    comm.Close();
+                }
+
+                //Show() must go after SetChart() - if not, this (fairly strange) exception is thrown:
+                //    "Cannot modify the logical children for this node at this time because a tree walk is in progress"
+                win2.Show();
+            }
+            else
+            {
+                //No business was clicked - show an error window?
+            }
+        }
+
+        private void buttonReviews_Click(object sender, RoutedEventArgs e)
+        {
+            //Make the table window, but don't display it yet.
+            TableWindow win2 = new TableWindow();
+
+            Business selectedBusiness = new Business();
+            //If the user has selected a business in the GUI...
+            if (this.BusinessGrid.SelectedItem != null)
+            {
+                selectedBusiness = (Business)this.BusinessGrid.SelectedItem;
+
+
+                using (var comm = new NpgsqlConnection(buildConnectString()))
+                {
+                    comm.Open();
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+
+                        cmd.CommandText = "SELECT review_table.date, user_table.name, review_table.stars, review_table.text FROM business_table JOIN review_table ON review_table.business_id=business_table.business_id JOIN user_table ON user_table.user_id=review_table.user_id";
+                        cmd.CommandText += " WHERE ";
+
+                        cmd.CommandText += "business_table.business_id = '" + selectedBusiness.bus_id + "';";
+
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                //For each result, create a Review object that stores all of the data we need
+                                //  from the database.
+                                Review review = new Review();
+
+                                review.date = reader.GetString(0);
+                                review.user_name = reader.GetString(1);
+                                review.stars = reader.GetInt32(2);
+                                review.text = reader.GetString(3);
+
+                                //Add the object to the table.
+                                win2.ReviewGrid.Items.Add(review);
+                            }
+                        }
+                    }
+                    comm.Close();
+                }
+
+                win2.Show();
+            }
+            else
+            {
+                //No business was clicked - show an error window?
+            }
+        }
+
+        private void buttonNumBusinessPerZip_Click(object sender, RoutedEventArgs e)
+        {
+            //Make the graph window, but don't display it yet.
+            GraphWindow win2 = new GraphWindow();
+
+            string selectedCity;
+            //If the user has selected a business in the GUI...
+            if (this.cityList.SelectedItem != null)
+            {
+                selectedCity = this.cityList.SelectedItem.ToString();
+
+                //Replace the placeholder '[Business Name]' text with the business' name.
+                win2.checkinChart.Title = "Number of Businesses per Zipcode for " + selectedCity;
+
+
+                using (var comm = new NpgsqlConnection(buildConnectString()))
+                {
+                    comm.Open();
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+
+                        cmd.CommandText = "SELECT postal_code, COUNT(business_id) FROM business_table WHERE city = '" + selectedCity + "' GROUP BY postal_code;";
+
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            List<KeyValuePair<string, int>> dataList = new List<KeyValuePair<string, int>>();
+                            while (reader.Read())
+                            {
+                                //For each result, add the value pair to the list that we'll pass to the graph window.
+                                dataList.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(1)));
+                            }
+
+                            win2.SetChart(dataList);
+                        }
+                    }
+                    comm.Close();
+                }
+
+                //Show() must go after SetChart() - if not, this (fairly strange) exception is thrown:
+                //    "Cannot modify the logical children for this node at this time because a tree walk is in progress"
+                win2.Show();
+            }
+            else
+            {
+                //No city was selected - show an error window?
+            }
+        }
+
+        private void button_CurrentUserSearch_Click(object sender, RoutedEventArgs e)
+        {
+            //Get the name entered by the user.
+            string name = textBox_CurrentUser.Text;
+
+            using (var comm = new NpgsqlConnection(buildConnectString()))
+            {
+                comm.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder("SELECT U.user_id FROM user_table as U ");
+                    sql.Append("WHERE name ='" + name + "';");
+
+
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            listBox_CurrentUserIDMatch.Items.Add(reader.GetString(0));//adds record to display
+                        }
+                    }
+                }
+                comm.Close();
+            }
+        }
+
+        private void listBox_CurrentUserIDMatch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Get the ID clicked on by the user.
+            string id = listBox_CurrentUserIDMatch.SelectedItem.ToString();
+
+            //Clear all of the info tables and text boxes.
+            FriendGrid.Items.Clear();
+            TipGrid.Items.Clear();
+            textBox_UserInformationName.Clear();
+            textBox_UserInformationStars.Clear();
+            textBox_UserInformationFans.Clear();
+            textBox_UserInformationYelpingSince.Clear();
+            textBox_UserInformationVotesFunny.Clear();
+            textBox_UserInformationVotesCool.Clear();
+            textBox_UserInformationVotesUseful.Clear();
+            textBox_UserLocationLatitude.Clear();
+            textBox_UserLocationLongitude.Clear();
+
+
+            using (var comm = new NpgsqlConnection(buildConnectString()))
+            {
+                comm.Open();
+
+                //Run query for user's info
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder(@"
+                        SELECT name, average_stars, fans, yelping_since, funny, cool, useful FROM user_table
+                        WHERE user_table.user_id='" + id + "';");
+
+
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            textBox_UserInformationName.Text = reader.GetString(0);
+                            textBox_UserInformationStars.Text = reader.GetDouble(1).ToString();
+                            textBox_UserInformationFans.Text = reader.GetInt32(2).ToString();
+                            textBox_UserInformationYelpingSince.Text = reader.GetString(3);
+                            textBox_UserInformationVotesFunny.Text = reader.GetInt32(4).ToString();
+                            textBox_UserInformationVotesCool.Text = reader.GetInt32(5).ToString();
+                            textBox_UserInformationVotesUseful.Text = reader.GetInt32(6).ToString();
+                        }
+                    }
+                }
+
+                //Run query for user's friends
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder(@"
+                        SELECT user_table.user_id, user_table.name, user_table.average_stars, user_table.yelping_since, user_table.funny, user_table.cool, user_table.useful FROM friendship_table
+                        JOIN user_table ON user_table.user_id=friendship_table.friend2_id
+                        WHERE friend1_id='" + id + "';");
+
+
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //For each result, create a User object that stores all of the data we need
+                            //  from the database.
+                            User user = new User();
+
+                            user.user_id = reader.GetString(0);
+                            user.name = reader.GetString(1);
+                            user.average_stars = reader.GetDouble(2);
+                            user.yelping_since = reader.GetString(3);
+                            user.funny = reader.GetInt32(4);
+                            user.cool = reader.GetInt32(5);
+                            user.useful = reader.GetInt32(6);
+
+                            FriendGrid.Items.Add(user);//adds record to display
+                        }
+                    }
+                }
+
+                //Run query for user's friends' reviews
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = comm;
+                    StringBuilder sql = new StringBuilder(@"
+                        SELECT F.name AS user_name, business_table.name AS business_name, business_table.city, review_table.text FROM
+                            (SELECT * FROM friendship_table
+                            JOIN user_table ON friendship_table.friend2_id=user_table.user_id
+                            WHERE friend1_id='" + id + @"')
+                        AS F JOIN review_table ON F.user_id=review_table.user_id
+                        JOIN business_table ON business_table.business_id=review_table.business_id;");
+
+
+                    cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //For each result, create a Review object that stores all of the data we need
+                            //  from the database.
+                            Review review = new Review();
+
+                            review.user_name = reader.GetString(0);
+                            review.business_name = reader.GetString(1);
+                            review.city = reader.GetString(2);
+                            review.text = reader.GetString(3);
+
+                            TipGrid.Items.Add(review);//adds record to display
+                        }
+                    }
+                }
+
+                comm.Close();
+            }
+        }
+
+        private void button_RemoveFriend_Click(object sender, RoutedEventArgs e)
+        {
+            //Get the current user.
+            string id = listBox_CurrentUserIDMatch.SelectedItem.ToString();
+
+            if (FriendGrid.SelectedItem != null)
+            {
+                using (var comm = new NpgsqlConnection(buildConnectString()))
+                {
+                    comm.Open();
+
+                    //Run query for user's info
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+
+                        StringBuilder sql = new StringBuilder(@"
+                        DELETE FROM friendship_table
+                        WHERE (friend1_id='" + id + @"' AND friend2_id='" + ((User)FriendGrid.SelectedItem).user_id + @"') OR (friend1_id='" + ((User)FriendGrid.SelectedItem).user_id + @"' AND friend2_id='" +  id + "');");
+
+
+                        cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                        using (cmd.ExecuteReader()) { }  //If called without something like using, the next command will fail, stating one is already running.
+
+                    }
+
+                    comm.Close();
+                }
+
+                FriendGrid.Items.Remove(FriendGrid.SelectedItem);
+            }
+        }
     }
+
 }
