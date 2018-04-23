@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Npgsql;
-using System.Dynamic;
 
 namespace Team37_Mile2
 {
@@ -43,7 +42,28 @@ namespace Team37_Mile2
             }
         }
 
-        
+        public class Review
+        {
+            public String date { get; set; }
+            public String user_name { get; set; }
+            public int stars { get; set; }
+            public string text { get; set; }
+
+            public string business_name { get; set; }
+            public string city { get; set; }
+        }
+
+        public class User
+        {
+            public string user_id { get; set; }
+            public string name { get; set; }
+            public double average_stars { get; set; }
+            public string yelping_since { get; set; }
+            public int funny { get; set; }
+            public int cool { get; set; }
+            public int useful { get; set; }
+        }
+
 
         public MainWindow()
         {
@@ -524,17 +544,17 @@ namespace Team37_Mile2
                         {
                             while (reader.Read())
                             {
-                                //For each result, create a dynamic object that stores all of the data we need
+                                //For each result, create a Review object that stores all of the data we need
                                 //  from the database.
-                                dynamic obj = new ExpandoObject();
+                                Review review = new Review();
 
-                                obj.date = reader.GetString(0);
-                                obj.name = reader.GetString(1);
-                                obj.stars = reader.GetInt32(2);
-                                obj.text = reader.GetString(3);
+                                review.date = reader.GetString(0);
+                                review.user_name = reader.GetString(1);
+                                review.stars = reader.GetInt32(2);
+                                review.text = reader.GetString(3);
 
                                 //Add the object to the table.
-                                win2.ReviewGrid.Items.Add(obj);
+                                win2.ReviewGrid.Items.Add(review);
                             }
                         }
                     }
@@ -680,7 +700,7 @@ namespace Team37_Mile2
                 {
                     cmd.Connection = comm;
                     StringBuilder sql = new StringBuilder(@"
-                        SELECT user_table.name, user_table.average_stars, user_table.yelping_since, user_table.funny, user_table.cool, user_table.useful FROM friendship_table
+                        SELECT user_table.user_id, user_table.name, user_table.average_stars, user_table.yelping_since, user_table.funny, user_table.cool, user_table.useful FROM friendship_table
                         JOIN user_table ON user_table.user_id=friendship_table.friend2_id
                         WHERE friend1_id='" + id + "';");
 
@@ -690,19 +710,19 @@ namespace Team37_Mile2
                     {
                         while (reader.Read())
                         {
-                            //For each result, create a dynamic object that stores all of the data we need
+                            //For each result, create a User object that stores all of the data we need
                             //  from the database.
-                            dynamic obj = new ExpandoObject();
+                            User user = new User();
 
-                            obj.name = reader.GetString(0);
-                            obj.average_stars = reader.GetDouble(1).ToString();
-                            obj.yelping_since = reader.GetString(2);
-                            obj.funny = reader.GetInt32(3).ToString();
-                            obj.cool = reader.GetInt32(4).ToString();
-                            obj.useful = reader.GetInt32(5).ToString();
+                            user.user_id = reader.GetString(0);
+                            user.name = reader.GetString(1);
+                            user.average_stars = reader.GetDouble(2);
+                            user.yelping_since = reader.GetString(3);
+                            user.funny = reader.GetInt32(4);
+                            user.cool = reader.GetInt32(5);
+                            user.useful = reader.GetInt32(6);
 
-
-                            FriendGrid.Items.Add(obj);//adds record to display
+                            FriendGrid.Items.Add(user);//adds record to display
                         }
                     }
                 }
@@ -725,22 +745,54 @@ namespace Team37_Mile2
                     {
                         while (reader.Read())
                         {
-                            //For each result, create a dynamic object that stores all of the data we need
+                            //For each result, create a Review object that stores all of the data we need
                             //  from the database.
-                            dynamic obj = new ExpandoObject();
+                            Review review = new Review();
 
-                            obj.user_name = reader.GetString(0);
-                            obj.business_name = reader.GetString(1);
-                            obj.city = reader.GetString(2);
-                            obj.text = reader.GetString(3);
+                            review.user_name = reader.GetString(0);
+                            review.business_name = reader.GetString(1);
+                            review.city = reader.GetString(2);
+                            review.text = reader.GetString(3);
 
-
-                            TipGrid.Items.Add(obj);//adds record to display
+                            TipGrid.Items.Add(review);//adds record to display
                         }
                     }
                 }
 
                 comm.Close();
+            }
+        }
+
+        private void button_RemoveFriend_Click(object sender, RoutedEventArgs e)
+        {
+            //Get the current user.
+            string id = listBox_CurrentUserIDMatch.SelectedItem.ToString();
+
+            if (FriendGrid.SelectedItem != null)
+            {
+                using (var comm = new NpgsqlConnection(buildConnectString()))
+                {
+                    comm.Open();
+
+                    //Run query for user's info
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+
+                        StringBuilder sql = new StringBuilder(@"
+                        DELETE FROM friendship_table
+                        WHERE (friend1_id='" + id + @"' AND friend2_id='" + ((User)FriendGrid.SelectedItem).user_id + @"') OR (friend1_id='" + ((User)FriendGrid.SelectedItem).user_id + @"' AND friend2_id='" +  id + "');");
+
+
+                        cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                        using (cmd.ExecuteReader()) { }  //If called without something like using, the next command will fail, stating one is already running.
+                 
+                    }
+
+                    comm.Close();
+                }
+
+                FriendGrid.Items.Remove(FriendGrid.SelectedItem);
             }
         }
     }

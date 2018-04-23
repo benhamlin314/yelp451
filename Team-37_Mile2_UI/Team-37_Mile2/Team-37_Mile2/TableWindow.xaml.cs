@@ -34,7 +34,7 @@ namespace Team37_Mile2
 
             DataGridTextColumn col2 = new DataGridTextColumn();
             col2.Header = "User Name";
-            col2.Binding = new Binding("name");
+            col2.Binding = new Binding("user_name");
             ReviewGrid.Columns.Add(col2);
 
             DataGridTextColumn col3 = new DataGridTextColumn();
