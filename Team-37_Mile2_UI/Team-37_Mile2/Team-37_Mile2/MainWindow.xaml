@@ -95,7 +95,7 @@
                         <Label x:Name="label3" Content="Categories:" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-0.829,-0.769" Width="76"/>
                     </Grid>
                     <GroupBox x:Name="Businesses" Header="Businesses" HorizontalAlignment="Left" Margin="196,75,0,0" VerticalAlignment="Top" Height="310" Width="516" Grid.Row="1">
-                        <DataGrid x:Name="BusinessGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="268" Width="482" SelectionChanged="BusinessGrid_SelectionChanged"/>
+                        <DataGrid x:Name="BusinessGrid" IsReadOnly="True" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="268" Width="482" SelectionChanged="BusinessGrid_SelectionChanged"/>
                     </GroupBox>
                     <GroupBox x:Name="group_selected_cat" Header="Selected Categories:" HorizontalAlignment="Left" Height="188" Margin="22,341,0,0" Grid.Row="1" VerticalAlignment="Top" Width="162">
                         <ListBox x:Name="selected_categories" HorizontalAlignment="Left" Height="154" Margin="0,10,-2,0" VerticalAlignment="Top" Width="152"/>
