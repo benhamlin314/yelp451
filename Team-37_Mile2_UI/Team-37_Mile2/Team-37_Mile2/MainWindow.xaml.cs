@@ -660,8 +660,19 @@ namespace Team37_Mile2
         //changes selected business at bottom of screen allowing checkin and addition of review
         private void BusinessGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //This will be null at some point if the user selects a business on the grid, and
+            //  then attempts another business search.
             Business tempbus = (Business)BusinessGrid.SelectedItem;
-            Name.Text = tempbus.name;
+            if (tempbus != null)
+            {
+                Name.Text = tempbus.name;
+            }
+            else
+            {
+                Name.Text = "Business Name";
+            }
+            
+            
         }
 
         private static Random random = new Random();
@@ -706,8 +717,14 @@ namespace Team37_Mile2
                 comm.Open();
                 using (var cmd = new NpgsqlCommand())
                 {
+                    Console.WriteLine(((ListBoxItem)rating.SelectedItem).Content.ToString());
+                    string dateTime = DateTime.Now.ToString("yyyy-MM-dd");
+                    //int test = int.Parse(((ListBoxItem)rating.SelectedItem).Content.ToString());
+
                     cmd.Connection = comm;
-                    cmd.CommandText = "INSERT INTO review_table (review_id, user_id, business_id, date, text, stars, funny, cool, useful) VALUES ('"+rev_id+"','"+(listBox_CurrentUserIDMatch.SelectedItem)+"','"+((Business)BusinessGrid.SelectedItem).bus_id+"','"+DateTime.Now.ToString("yyy-MM-dd")+"','"+review.ToString()+"',"+Convert.ToInt32(rating.ToString())+",0,0,0);";//INCOMPLETE
+                    cmd.CommandText = "INSERT INTO review_table (review_id, user_id, business_id, date, text, stars, funny, cool, useful) VALUES ('"
+                        + rev_id + "','" + (listBox_CurrentUserIDMatch.SelectedItem) + "','" + ((Business)BusinessGrid.SelectedItem).bus_id + "','"
+                        + dateTime +"','" + review.ToString() + "'," + ((ListBoxItem)rating.SelectedItem).Content.ToString() + ",0,0,0);";//INCOMPLETE
                     using (var reader = cmd.ExecuteReader())//needed to execute the command
                     {
                     }

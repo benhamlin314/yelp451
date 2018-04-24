@@ -142,11 +142,11 @@
                             <TextBox x:Name="review" HorizontalAlignment="Left" Height="95" Margin="9,37,0,0" TextWrapping="Wrap" Text="&lt;New Review&gt;" VerticalAlignment="Top" Width="353"/>
                             <Label Content="Rating:" HorizontalAlignment="Left" Margin="377,42,0,0" VerticalAlignment="Top" Width="63"/>
                             <ComboBox x:Name="rating" HorizontalAlignment="Left" Margin="377,73,0,0" VerticalAlignment="Top" Width="104">
-                                <Label Content="1" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                <Label Content="2" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                <Label Content="3" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                <Label Content="4" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                <Label Content="5" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <ListBoxItem Content="1" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <ListBoxItem Content="2" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <ListBoxItem Content="3" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <ListBoxItem Content="4" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <ListBoxItem Content="5" Width="94" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             </ComboBox>
                             <Button x:Name="submit_review" Content="Add Review" HorizontalAlignment="Left" Margin="377,112,0,0" VerticalAlignment="Top" Width="104" Background="#FF284CB0" FontWeight="Bold" Foreground="White" Click="submit_review_Click"/>
 
