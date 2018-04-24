@@ -475,8 +475,9 @@ namespace Team37_Mile2
             //filters for meals
             if (anymeal.IsChecked == false)
             {
-                sb_meal.Append(" AND (A.attribute_name = 'GoodForMeal' AND A.val = '{''dessert'': ");
-                if (Dessert.IsChecked == true)
+                //breakfast, latenight, brunch, dessert, dinner, lunch
+                sb_meal.Append(" AND (A.attribute_name = 'GoodForMeal' AND A.val = '{''breakfast'': ");
+                if (Breakfast.IsChecked == true)
                 {
                     sb_meal.Append("True, ");
                 }
@@ -484,6 +485,7 @@ namespace Team37_Mile2
                 {
                     sb_meal.Append("False, ");
                 }
+
                 sb_meal.Append("''latenight'': ");
                 if (Late_Night.IsChecked == true)
                 {
@@ -493,8 +495,19 @@ namespace Team37_Mile2
                 {
                     sb_meal.Append("False, ");
                 }
-                sb_meal.Append("''lunch'': ");
-                if (Lunch.IsChecked == true)
+
+                sb_meal.Append("''brunch'': ");
+                if (Brunch.IsChecked == true)
+                {
+                    sb_meal.Append("True, '");
+                }
+                else
+                {
+                    sb_meal.Append("False, ");
+                }
+
+                sb_meal.Append("''dessert'': ");
+                if (Dessert.IsChecked == true)
                 {
                     sb_meal.Append("True, ");
                 }
@@ -502,6 +515,7 @@ namespace Team37_Mile2
                 {
                     sb_meal.Append("False, ");
                 }
+
                 sb_meal.Append("''dinner'': ");
                 if (Dinner.IsChecked == true)
                 {
@@ -511,25 +525,18 @@ namespace Team37_Mile2
                 {
                     sb_meal.Append("False, ");
                 }
-                sb_meal.Append("''breakfast'': ");
-                if (Breakfast.IsChecked == true)
+
+                sb_meal.Append("''lunch'': ");
+                if (Lunch.IsChecked == true)
                 {
-                    sb_meal.Append("True, ");
-                }
-                else
-                {
-                    sb_meal.Append("False, ");
-                }
-                sb_meal.Append("''brunch'': ");
-                if (Brunch.IsChecked == true)
-                {
-                    sb_meal.Append("True}'");
+                    sb_meal.Append("True}')");
                 }
                 else
                 {
                     sb_meal.Append("False}')");
                 }
-                sb_meal.Append(")");
+
+                //sb_meal.Append(")");
             }
             //end filter by meal
 
