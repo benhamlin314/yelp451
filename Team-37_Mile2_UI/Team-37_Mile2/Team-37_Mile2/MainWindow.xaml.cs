@@ -499,7 +499,7 @@ namespace Team37_Mile2
                 sb_meal.Append("''brunch'': ");
                 if (Brunch.IsChecked == true)
                 {
-                    sb_meal.Append("True, '");
+                    sb_meal.Append("True, ");
                 }
                 else
                 {
