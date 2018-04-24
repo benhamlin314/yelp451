@@ -444,7 +444,10 @@ namespace Team37_Mile2
 
 
             //filters for meals
-            sb_meal.Append(" AND A.GoodForMeal = '{'dessert': ");
+            //Note: All single quotes in attribute names within the a.Val list must be escaped
+            //  (done using a second single quote), or the command will fail because the string
+            //  will end early.
+            sb_meal.Append(" AND (A.attribute_name = 'GoodForMeal' AND a.val = '{''dessert'': ");
             if (Dessert.IsChecked == true)
             {
                 sb_meal.Append("True, ");
@@ -453,7 +456,7 @@ namespace Team37_Mile2
             {
                 sb_meal.Append("False, ");
             }
-            sb_meal.Append("'latenight': ");
+            sb_meal.Append("''latenight'': ");
             if (Late_Night.IsChecked == true)
             {
                 sb_meal.Append("True, ");
@@ -462,7 +465,7 @@ namespace Team37_Mile2
             {
                 sb_meal.Append("False, ");
             }
-            sb_meal.Append("'lunch': ");
+            sb_meal.Append("''lunch'': ");
             if (Lunch.IsChecked == true)
             {
                 sb_meal.Append("True, ");
@@ -471,7 +474,7 @@ namespace Team37_Mile2
             {
                 sb_meal.Append("False, ");
             }
-            sb_meal.Append("'dinner': ");
+            sb_meal.Append("''dinner'': ");
             if (Dinner.IsChecked == true)
             {
                 sb_meal.Append("True, ");
@@ -480,7 +483,7 @@ namespace Team37_Mile2
             {
                 sb_meal.Append("False, ");
             }
-            sb_meal.Append("'breakfast': ");
+            sb_meal.Append("''breakfast'': ");
             if (Breakfast.IsChecked == true)
             {
                 sb_meal.Append("True, ");
@@ -489,7 +492,7 @@ namespace Team37_Mile2
             {
                 sb_meal.Append("False, ");
             }
-            sb_meal.Append("'brunch': ");
+            sb_meal.Append("''brunch'': ");
             if (Brunch.IsChecked == true)
             {
                 sb_meal.Append("True}'");
@@ -498,8 +501,9 @@ namespace Team37_Mile2
             {
                 sb_meal.Append("False}'");
             }
+            sb_meal.Append(")");
             //end filter by meal
-            
+
 
             if (day.SelectedItem != null)//works with set up of "10:00-20:00"
             {
@@ -522,7 +526,7 @@ namespace Team37_Mile2
                     {
                          sql.Append("JOIN business_category_table as C ON B.business_id=C.business_id ");
                     }
-                    if (sb_att.Length > 0)
+                    if (sb_att.Length > 0 || sb_meal.Length > 0)
                     {
                         sql.Append("JOIN business_attribute_table as A ON B.business_id=A.business_id ");
                     }
