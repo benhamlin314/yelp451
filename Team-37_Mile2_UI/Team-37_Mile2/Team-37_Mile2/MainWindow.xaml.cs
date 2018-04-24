@@ -637,9 +637,13 @@ namespace Team37_Mile2
                         }
                     }
 
+                    //If the user chose to sort by distance, do this locally
+                    //  (since we don't collect the distances through a SQL query)
                     if(sortby.SelectedIndex == 5)
                     {
-                        //have to sort in Business grid
+                        ItemCollection tempItems = BusinessGrid.Items;
+                        tempItems.SortDescriptions.Add(new SortDescription("distance", ListSortDirection.Ascending));
+                        tempItems.Refresh();
                     }
                 }
                 comm.Close();
