@@ -55,7 +55,7 @@
 
                             <Label x:Name="label_UserLocationLongitude" Content="Longitude" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,36,0,0"/>
                             <TextBox x:Name="textBox_UserLocationLongitude" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="130" Margin="89,40,0,0"/>
-                            <Button x:Name="button_UserLocationSet" Content="Set Location" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" Margin="157,79,0,0"/>
+                            <Button x:Name="button_UserLocationSet" Content="Set Location" HorizontalAlignment="Left" Width="80" Margin="157,79,0,1" Click="button_UserLocationSet_Click"/>
 
                         </Grid>
                     </GroupBox>
@@ -108,14 +108,15 @@
 
                     </Grid>
                     <Button x:Name="Submit" Content="Search" HorizontalAlignment="Left" Margin="22,565,0,0" Grid.Row="1" VerticalAlignment="Top" Width="162" FontSize="14" FontWeight="Bold" Height="24" Click="Submit_Click"/>
-                    <GroupBox x:Name="group_bymeal" Header="Filter by Meal:" HorizontalAlignment="Left" Height="88" Margin="717,315,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
+                    <GroupBox x:Name="group_bymeal" Header="Filter by Meal:" HorizontalAlignment="Left" Height="97" Margin="717,315,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
                         <Grid Margin="0,0,0,-1">
-                            <CheckBox x:Name="Breakfast" Content="Breakfast" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="Brunch" Content="Brunch" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="Lunch" Content="Lunch" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="Dinner" Content="Dinner" HorizontalAlignment="Left" Margin="91,10,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="Dessert" Content="Dessert" HorizontalAlignment="Left" Margin="91,25,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="Late_Night" Content="Late Night" HorizontalAlignment="Left" Margin="91,40,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="Breakfast" Content="Breakfast" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="Brunch" Content="Brunch" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="Lunch" Content="Lunch" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="Dinner" Content="Dinner" HorizontalAlignment="Left" Margin="91,25,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="Dessert" Content="Dessert" HorizontalAlignment="Left" Margin="91,40,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="Late_Night" Content="Late Night" HorizontalAlignment="Left" Margin="91,55,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="anymeal" Content="Any" HorizontalAlignment="Left" Margin="54,5,0,0" VerticalAlignment="Top" IsChecked="True"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Filter by Attribute:" HorizontalAlignment="Left" Height="234" Margin="717,76,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
@@ -153,8 +154,8 @@
                     </GroupBox>
                     <GroupBox Header="Sort by:" HorizontalAlignment="Left" Height="62" Margin="717,417,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
                         <Grid Margin="0,0,0,-1">
-                            <ComboBox Name="sortby" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="152">
-                                <ListBoxItem Content="Name" IsSelected="True"/>
+                            <ComboBox Name="sortby" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="152" SelectedIndex="0">
+                                <ListBoxItem Content="Name"/>
                                 <ListBoxItem Content="Stars"/>
                                 <ListBoxItem Content="Review Count"/>
                                 <ListBoxItem Content="Review Ratings"/>

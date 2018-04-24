@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Npgsql;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace Team37_Mile2
 {
@@ -22,6 +23,34 @@ namespace Team37_Mile2
     /// </summary>
     public partial class MainWindow : Window
     {
+        private double usrlong;
+        private double usrlat;
+
+        private void set_usrlocation(string usrlongstr,string usrlatstr)
+        {
+            if (usrlongstr.StartsWith("-"))
+            {
+                usrlongstr.TrimStart('-');
+                usrlong = Double.Parse(usrlongstr);
+                usrlong *= -1;
+            }
+            else
+            {
+                usrlong = Double.Parse(usrlongstr);
+            }
+            if (usrlatstr[0] == '-')
+            {
+                usrlatstr.TrimStart('-');
+                usrlat = Double.Parse(usrlatstr);
+                usrlat *= -1;
+            }
+            else
+            {
+                usrlat = Double.Parse(usrlatstr);
+            }
+
+        }
+
         public class Business
         {
             public string bus_id { get; set; }
@@ -78,7 +107,7 @@ namespace Team37_Mile2
         private string buildConnectString()
         {
             //-- DEBUG -- (Jared: my postgres user has a different password, not sure how to change it)
-            return "Server=localhost; Port=5432; Username=postgres; Password=password; Database=yelp451";
+            return "Server=localhost; Port=5432; Username=postgres; Password=1234; Database=yelp451";
         }
 
         public void addStates()
@@ -396,111 +425,117 @@ namespace Team37_Mile2
             //end filter for attributes
 
             //filters for prices
-            sb_price.Append(" AND (");
-            if(price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
+            if (!(price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == false))
             {
-                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
-            }
-            else if(price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
-            }
-            else if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2')");
-            }
-            else if (price1.IsChecked == true && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '1')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '2')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == true)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '3')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == true)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '4')");
+                sb_price.Append(" AND (");
+                if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+                }
+                else if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
+                }
+                else if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2')");
+                }
+                else if (price1.IsChecked == true && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '1')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '2')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == true)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '3')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == true)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '4')");
+                }
             }
             //end filter for prices
 
 
             //filters for meals
-            sb_meal.Append(" AND A.GoodForMeal = '{'dessert': ");
-            if (Dessert.IsChecked == true)
+            if (anymeal.IsChecked == false)
             {
-                sb_meal.Append("True, ");
-            }
-            else
-            {
-                sb_meal.Append("False, ");
-            }
-            sb_meal.Append("'latenight': ");
-            if (Late_Night.IsChecked == true)
-            {
-                sb_meal.Append("True, ");
-            }
-            else
-            {
-                sb_meal.Append("False, ");
-            }
-            sb_meal.Append("'lunch': ");
-            if (Lunch.IsChecked == true)
-            {
-                sb_meal.Append("True, ");
-            }
-            else
-            {
-                sb_meal.Append("False, ");
-            }
-            sb_meal.Append("'dinner': ");
-            if (Dinner.IsChecked == true)
-            {
-                sb_meal.Append("True, ");
-            }
-            else
-            {
-                sb_meal.Append("False, ");
-            }
-            sb_meal.Append("'breakfast': ");
-            if (Breakfast.IsChecked == true)
-            {
-                sb_meal.Append("True, ");
-            }
-            else
-            {
-                sb_meal.Append("False, ");
-            }
-            sb_meal.Append("'brunch': ");
-            if (Brunch.IsChecked == true)
-            {
-                sb_meal.Append("True}'");
-            }
-            else
-            {
-                sb_meal.Append("False}'");
+                sb_meal.Append(" AND (A.attribute_name = 'GoodForMeal' AND A.val = '{''dessert'': ");
+                if (Dessert.IsChecked == true)
+                {
+                    sb_meal.Append("True, ");
+                }
+                else
+                {
+                    sb_meal.Append("False, ");
+                }
+                sb_meal.Append("''latenight'': ");
+                if (Late_Night.IsChecked == true)
+                {
+                    sb_meal.Append("True, ");
+                }
+                else
+                {
+                    sb_meal.Append("False, ");
+                }
+                sb_meal.Append("''lunch'': ");
+                if (Lunch.IsChecked == true)
+                {
+                    sb_meal.Append("True, ");
+                }
+                else
+                {
+                    sb_meal.Append("False, ");
+                }
+                sb_meal.Append("''dinner'': ");
+                if (Dinner.IsChecked == true)
+                {
+                    sb_meal.Append("True, ");
+                }
+                else
+                {
+                    sb_meal.Append("False, ");
+                }
+                sb_meal.Append("''breakfast'': ");
+                if (Breakfast.IsChecked == true)
+                {
+                    sb_meal.Append("True, ");
+                }
+                else
+                {
+                    sb_meal.Append("False, ");
+                }
+                sb_meal.Append("''brunch'': ");
+                if (Brunch.IsChecked == true)
+                {
+                    sb_meal.Append("True}'");
+                }
+                else
+                {
+                    sb_meal.Append("False}')");
+                }
             }
             //end filter by meal
             
 
-            if (day != null)//works with set up of "10:00-20:00"
+            if (day.SelectedItem != null)//works with set up of "10:00-20:00"
             {
-                if (opened != null && closed != null)
+                if (opened.SelectedItem != null && closed.SelectedItem != null)
                 {
                     sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
                 }
@@ -519,7 +554,7 @@ namespace Team37_Mile2
                     {
                          sql.Append("JOIN business_category_table as C ON B.business_id=C.business_id ");
                     }
-                    if (sb_att.Length > 0)
+                    if (sb_att.Length > 0 || sb_meal.Length > 0)
                     {
                         sql.Append("JOIN business_attribute_table as A ON B.business_id=A.business_id ");
                     }
@@ -576,6 +611,9 @@ namespace Team37_Mile2
                     cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
                     using (var reader = cmd.ExecuteReader())
                     {
+                        //var format = new NumberFormatInfo();
+                        //format.NegativeSign = "-";
+                        //format.NumberDecimalSeparator = ".";
                         while (reader.Read())
                         {
                             Business temp = new Business();
@@ -589,7 +627,7 @@ namespace Team37_Mile2
                             temp.review_rating = reader.GetDouble(7);
                             temp.bus_lat = reader.GetDouble(8);
                             temp.bus_long = reader.GetDouble(9);
-                            temp.distance = temp.calc_dist(Convert.ToDouble(textBox_UserLocationLongitude.ToString()), Convert.ToDouble(textBox_UserLocationLatitude.ToString()));//needs user long and lat to calculate
+                            temp.distance = temp.calc_dist(usrlat,usrlong);//needs user long and lat to calculate
                             //BusinessGrid.Items.Add(new Business() { name = reader.GetString(0), state_var = reader.GetString(1), city = reader.GetString(2), stars = reader.GetDouble(3), distance = , address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
                             BusinessGrid.Items.Add(temp);//adds record to display
 
@@ -614,22 +652,52 @@ namespace Team37_Mile2
             Name.Text = tempbus.name;
         }
 
+        private static Random random = new Random();
+        public static string RandomId(int length)//modified from quick google to generate id
+        {
+            const string chars = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789_-";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         //adds review using user info and filled out info. check for empty review text
         private void submit_review_Click(object sender, RoutedEventArgs e)
         {
+            string rev_id = "";
+            bool goodrevid = false;
+            while (!goodrevid)
+            {
+                rev_id = RandomId(22);
+                using (var comm = new NpgsqlConnection(buildConnectString()))//checks if id already exists
+                {
+                    comm.Open();
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+                        cmd.CommandText = "SELECT COUNT(review_id) FROM review_table WHERE review_id = '" + rev_id + "';";
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                if(reader.GetInt32(0) == 0)
+                                {
+                                    goodrevid = true;
+                                }
+                            }
+                        }
+                    }
+                    comm.Close();
+                }
+            }
             using (var comm = new NpgsqlConnection(buildConnectString()))
             {
                 comm.Open();
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = comm;
-                    cmd.CommandText = "INSERT INTO review_table (review_id, user_id, business_id, date, text, stars, funny, cool, useful) VALUES";//INCOMPLETE
-                    using (var reader = cmd.ExecuteReader())
+                    cmd.CommandText = "INSERT INTO review_table (review_id, user_id, business_id, date, text, stars, funny, cool, useful) VALUES ('"+rev_id+"','"+((User)listBox_CurrentUserIDMatch.SelectedItem).user_id+"','"+((Business)BusinessGrid.SelectedItem).bus_id+"','"+DateTime.Now.ToString("yyy-MM-dd")+"','"+review.ToString()+"',"+Convert.ToInt32(rating.ToString())+",0,0,0);";//INCOMPLETE
+                    using (var reader = cmd.ExecuteReader())//needed to execute the command
                     {
-                        while (reader.Read())
-                        {
-
-                        }
                     }
                 }
                 comm.Close();
@@ -985,6 +1053,11 @@ namespace Team37_Mile2
         private void checkin_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void button_UserLocationSet_Click(object sender, RoutedEventArgs e)
+        {
+            set_usrlocation(textBox_UserLocationLongitude.Text, textBox_UserLocationLatitude.Text);
         }
     }
 
