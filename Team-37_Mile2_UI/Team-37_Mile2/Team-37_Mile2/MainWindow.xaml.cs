@@ -396,46 +396,49 @@ namespace Team37_Mile2
             //end filter for attributes
 
             //filters for prices
-            sb_price.Append(" AND (");
-            if(price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
+            if (price1.IsChecked == true || price2.IsChecked == true || price3.IsChecked == true || price4.IsChecked == true)
             {
-                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
-            }
-            else if(price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
-            }
-            else if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2')");
-            }
-            else if (price1.IsChecked == true && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '1')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '2')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == true)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == false)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '3')");
-            }
-            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == true)
-            {
-                sb_price.Append("RestaurantsPriceRange2 = '4')");
+                sb_price.Append(" AND (");
+                if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+                }
+                else if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
+                }
+                else if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2')");
+                }
+                else if (price1.IsChecked == true && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '1')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '2')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == true)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == false)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '3')");
+                }
+                else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == true)
+                {
+                    sb_price.Append("RestaurantsPriceRange2 = '4')");
+                }
             }
             //end filter for prices
 
