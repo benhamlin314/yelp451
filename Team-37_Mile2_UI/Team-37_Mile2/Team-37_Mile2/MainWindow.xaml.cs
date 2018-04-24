@@ -1107,7 +1107,8 @@ namespace Team37_Mile2
                         using (var reader = cmd.ExecuteReader())
                         {
                             //Only one result at most should return, so if we get a result,
-                            //  we simply record that the query returned a match.
+                            //  we simply record the current count of the match and that
+                            //  a match was found.
                             while (reader.Read())
                             {
                                 matchFound = true;
