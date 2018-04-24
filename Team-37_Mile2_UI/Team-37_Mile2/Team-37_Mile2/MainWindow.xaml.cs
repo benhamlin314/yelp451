@@ -1106,9 +1106,7 @@ namespace Team37_Mile2
                     {
                         cmd.Connection = comm;
 
-                        StringBuilder sql = new StringBuilder(@"
-                        SELECT * checkin_table
-                        WHERE checkin_table.business_id = '" + id + "' AND day_var = '" + day + "' AND tod_var = '" + aggregateTimeOfDay + "';");
+                        StringBuilder sql = new StringBuilder("SELECT * FROM checkin_table WHERE checkin_table.business_id = '" + id + "' AND day_var = '" + day + "' AND tod_var = '" + aggregateTimeOfDay + "';");
 
                         cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
                         using (var reader = cmd.ExecuteReader())
@@ -1144,6 +1142,10 @@ namespace Team37_Mile2
                     }
 
                     //Else, add a new entry to the checkin table.
+                    //--- With the checkin_table redesign, every business has an entry for
+                    //  each aggregate time; they just default to 0. So this should never
+                    //  run?
+                    //  Leaving it in just in case. ---
                     else
                     {
                         using (var cmd = new NpgsqlCommand())
