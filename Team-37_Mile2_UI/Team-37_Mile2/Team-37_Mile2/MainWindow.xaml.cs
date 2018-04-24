@@ -107,7 +107,7 @@ namespace Team37_Mile2
         private string buildConnectString()
         {
             //-- DEBUG -- (Jared: my postgres user has a different password, not sure how to change it)
-            return "Server=localhost; Port=5432; Username=postgres; Password=1234; Database=yelp451";
+            return "Server=localhost; Port=5432; Username=postgres; Password=password; Database=yelp451";
         }
 
         public void addStates()
@@ -529,8 +529,8 @@ namespace Team37_Mile2
                 {
                     sb_meal.Append("False}')");
                 }
+                sb_meal.Append(")");
             }
-            sb_meal.Append(")");
             //end filter by meal
 
             if (day.SelectedItem != null)//works with set up of "10:00-20:00"
