@@ -707,7 +707,7 @@ namespace Team37_Mile2
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = comm;
-                    cmd.CommandText = "INSERT INTO review_table (review_id, user_id, business_id, date, text, stars, funny, cool, useful) VALUES ('"+rev_id+"','"+((User)listBox_CurrentUserIDMatch.SelectedItem).user_id+"','"+((Business)BusinessGrid.SelectedItem).bus_id+"','"+DateTime.Now.ToString("yyy-MM-dd")+"','"+review.ToString()+"',"+Convert.ToInt32(rating.ToString())+",0,0,0);";//INCOMPLETE
+                    cmd.CommandText = "INSERT INTO review_table (review_id, user_id, business_id, date, text, stars, funny, cool, useful) VALUES ('"+rev_id+"','"+(listBox_CurrentUserIDMatch.SelectedItem)+"','"+((Business)BusinessGrid.SelectedItem).bus_id+"','"+DateTime.Now.ToString("yyy-MM-dd")+"','"+review.ToString()+"',"+Convert.ToInt32(rating.ToString())+",0,0,0);";//INCOMPLETE
                     using (var reader = cmd.ExecuteReader())//needed to execute the command
                     {
                     }
