@@ -1057,7 +1057,105 @@ namespace Team37_Mile2
 
         private void checkin_Click(object sender, RoutedEventArgs e)
         {
+            //Get the current business.
+            string id = ((Business)BusinessGrid.SelectedItem).bus_id;
 
+            if (BusinessGrid.SelectedItem != null)
+            {
+                //Get the current day and hour.
+                string day = DateTime.Now.DayOfWeek.ToString();
+                int hour = DateTime.Now.Hour;
+
+                //Convert the hour to the correct aggregate time 
+                //  (morning, afternoon, evening, or night)
+                string aggregateTimeOfDay;
+                if (hour >= 6 && hour < 12) //Morning
+                {
+                    aggregateTimeOfDay = "morning";
+                }
+                else if (hour >= 12 && hour < 17) //Afternoon
+                {
+                    aggregateTimeOfDay = "afternoon";
+                }
+                else if (hour >= 17 && hour < 23) //Evening
+                {
+                    aggregateTimeOfDay = "evening";
+                }
+                else //Night
+                {
+                    aggregateTimeOfDay = "night";
+                }
+
+
+                using (var comm = new NpgsqlConnection(buildConnectString()))
+                {
+                    comm.Open();
+                    bool matchFound = false;
+                    int currentCount = 0;
+
+                    //Query the database to see if this business has an entry
+                    //  in the checkin table for this day and time already.
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = comm;
+
+                        StringBuilder sql = new StringBuilder(@"
+                        SELECT * checkin_table
+                        WHERE checkin_table.business_id = '" + id + "' AND day_var = '" + day + "' AND tod_var = '" + aggregateTimeOfDay + "';");
+
+                        cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            //Only one result at most should return, so if we get a result,
+                            //  we simply record that the query returned a match.
+                            while (reader.Read())
+                            {
+                                matchFound = true;
+                                currentCount = reader.GetInt32(3);
+                            }
+
+                        }  //If called without something like using, the next command will fail, stating one is already running.
+                    }
+
+                    //If the previous query returned an entry, simply update
+                    //  that entry with count_var + 1
+                    if (matchFound == true)
+                    {
+                        using (var cmd = new NpgsqlCommand())
+                        {
+                            cmd.Connection = comm;
+
+                            StringBuilder sql = new StringBuilder(@"
+                            UPDATE checkin_table
+                            SET count_var = " + (currentCount + 1).ToString() + @"
+                            WHERE checkin_table.business_id = '" + id + "' AND day_var = '" + day + "' AND tod_var = '" + aggregateTimeOfDay + "';");
+
+                            cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                            using (var reader = cmd.ExecuteReader()) { }  //If called without something like using, the next command will fail, stating one is already running.
+                        }
+                    }
+
+                    //Else, add a new entry to the checkin table.
+                    else
+                    {
+                        using (var cmd = new NpgsqlCommand())
+                        {
+                            cmd.Connection = comm;
+
+                            StringBuilder sql = new StringBuilder(@"
+                            INSERT INTO checkin_table
+                            VALUES (business_id='" + id + ", day_var='" + day + ", day_var='" + aggregateTimeOfDay + ", count_var = 0 ');");
+
+
+                            cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
+                            using (cmd.ExecuteReader()) { }  //If called without something like using, the next command will fail, stating one is already running.
+
+                        }
+                    }
+
+                    comm.Close();
+                }
+            }
         }
 
         private void button_UserLocationSet_Click(object sender, RoutedEventArgs e)

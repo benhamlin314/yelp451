@@ -69,11 +69,11 @@ CREATE TABLE review_table(
 
 CREATE TABLE checkin_table(
 	business_id CHAR(22),
-	day_var VARCHAR(255),
-	hour_var VARCHAR(255), /* individual hour, or aggregated to the four time values from Milestone 1?) */
+	day_var VARCHAR(9),
+	tod_var VARCHAR(9),
 	count_var INT,
 	
-	PRIMARY KEY (business_id, day_var, hour_var),
+	PRIMARY KEY (business_id, day_var, tod_var),
 	FOREIGN KEY (business_id) REFERENCES business_table(business_id)
 );
 
