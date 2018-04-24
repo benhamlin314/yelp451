@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Npgsql;
+using System.ComponentModel;
 
 namespace Team37_Mile2
 {
@@ -350,13 +351,12 @@ namespace Team37_Mile2
                 sb_cat.Append(" AND category = '" + selected_categories.Items[i-1] + "'");
             }
 
-            //if()
-
+            
+            //filters for attributes
             if (credit_cards.IsChecked == true)
             {
                 sb_att.Append(" AND (A.attribute_name = 'BusinessAcceptsCreditCards' AND A.val = 'true')");
             }
-            //like the above for Filter by Attributes box and filter by meal box
             if (reservations.IsChecked == true)
             {
                 sb_att.Append(" AND (A.attribute_name = 'RestrauntsReservations' AND A.val = 'true')");
@@ -393,8 +393,112 @@ namespace Team37_Mile2
             {
                 sb_att.Append(" AND (A.attribute_name = 'BikeParking' AND A.val = 'true')");
             }
+            //end filter for attributes
 
-            if(day != null)//works with set up of "10:00-20:00"
+            //filters for prices
+            sb_price.Append(" AND (");
+            if(price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+            }
+            else if(price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
+            }
+            else if (price1.IsChecked == true && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '1' OR RestaurantsPriceRange2 = '2')");
+            }
+            else if (price1.IsChecked == true && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == false)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '1')");
+            }
+            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == true)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+            }
+            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == true && price4.IsChecked == false)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '2' OR RestaurantsPriceRange2 = '3')");
+            }
+            else if (price1.IsChecked == false && price2.IsChecked == true && price3.IsChecked == false && price4.IsChecked == false)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '2')");
+            }
+            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == true)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '3' OR RestaurantsPriceRange2 = '4')");
+            }
+            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == true && price4.IsChecked == false)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '3')");
+            }
+            else if (price1.IsChecked == false && price2.IsChecked == false && price3.IsChecked == false && price4.IsChecked == true)
+            {
+                sb_price.Append("RestaurantsPriceRange2 = '4')");
+            }
+            //end filter for prices
+
+
+            //filters for meals
+            sb_meal.Append(" AND A.GoodForMeal = '{'dessert': ");
+            if (Dessert.IsChecked == true)
+            {
+                sb_meal.Append("True, ");
+            }
+            else
+            {
+                sb_meal.Append("False, ");
+            }
+            sb_meal.Append("'latenight': ");
+            if (Late_Night.IsChecked == true)
+            {
+                sb_meal.Append("True, ");
+            }
+            else
+            {
+                sb_meal.Append("False, ");
+            }
+            sb_meal.Append("'lunch': ");
+            if (Lunch.IsChecked == true)
+            {
+                sb_meal.Append("True, ");
+            }
+            else
+            {
+                sb_meal.Append("False, ");
+            }
+            sb_meal.Append("'dinner': ");
+            if (Dinner.IsChecked == true)
+            {
+                sb_meal.Append("True, ");
+            }
+            else
+            {
+                sb_meal.Append("False, ");
+            }
+            sb_meal.Append("'breakfast': ");
+            if (Breakfast.IsChecked == true)
+            {
+                sb_meal.Append("True, ");
+            }
+            else
+            {
+                sb_meal.Append("False, ");
+            }
+            sb_meal.Append("'brunch': ");
+            if (Brunch.IsChecked == true)
+            {
+                sb_meal.Append("True}'");
+            }
+            else
+            {
+                sb_meal.Append("False}'");
+            }
+            //end filter by meal
+            
+
+            if (day != null)//works with set up of "10:00-20:00"
             {
                 if (opened != null && closed != null)
                 {
@@ -434,6 +538,40 @@ namespace Team37_Mile2
                     if (sb_open.Length > 0) { sql.Append(" " + sb_open.ToString()); }
                     if (sb_price.Length > 0) { sql.Append(" " + sb_price.ToString()); }
 
+                    if (sortby.SelectedIndex != 5)
+                    {
+                        sql.Append(" ORDER BY ");
+                        switch (sortby.SelectedIndex)
+                        {
+                            case 0:
+                                {
+                                    sql.Append("B.name");
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    sql.Append("B.stars DESC");
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    sql.Append("B.review_count DESC");
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    sql.Append("B.review_rating DESC");
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    sql.Append("B.num_checkins DESC");
+                                    break;
+                                }
+                        }
+                    }
+                    
+
                     sql.Append(";");//adds semicolon to end of sql statement
                     cmd.CommandText = sql.ToString();//puts contents of sql string builder into communication with db
                     using (var reader = cmd.ExecuteReader())
@@ -451,13 +589,18 @@ namespace Team37_Mile2
                             temp.review_rating = reader.GetDouble(7);
                             temp.bus_lat = reader.GetDouble(8);
                             temp.bus_long = reader.GetDouble(9);
-                            //temp.distance = temp.calc_dist()//needs user long and lat to calculate
+                            temp.distance = temp.calc_dist(Convert.ToDouble(textBox_UserLocationLongitude.ToString()), Convert.ToDouble(textBox_UserLocationLatitude.ToString()));//needs user long and lat to calculate
                             //BusinessGrid.Items.Add(new Business() { name = reader.GetString(0), state_var = reader.GetString(1), city = reader.GetString(2), stars = reader.GetDouble(3), distance = , address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
                             BusinessGrid.Items.Add(temp);//adds record to display
 
 
                             //BusinessGrid.Items.Add(new Business() { name = reader.GetString(0), state_var = reader.GetString(1), city = reader.GetString(2), stars = reader.GetDouble(3), distance = , address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
                         }
+                    }
+
+                    if(sortby.SelectedIndex == 5)
+                    {
+                        //have to sort in Business grid
                     }
                 }
                 comm.Close();
@@ -480,12 +623,12 @@ namespace Team37_Mile2
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = comm;
-                    //cmd.CommandText = "SELECT business_table.* FROM business_table JOIN business_category_table ON business_table.business_id=business_category_table.business_id WHERE state_var ='" + stateList.SelectedItem.ToString() + "' AND city ='" + cityList.SelectedItem.ToString() + "' AND postal_code ='" + zipList.SelectedItem.ToString() + "' AND category ='" + categoryList.SelectedItem.ToString() + "';";
+                    cmd.CommandText = "INSERT INTO review_table (review_id, user_id, business_id, date, text, stars, funny, cool, useful) VALUES";//INCOMPLETE
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            //BusinessGrid.Items.Add(new Business() { name = reader.GetString(1), state_var = reader.GetString(2), city = reader.GetString(3), stars = reader.GetDouble(6), zip = reader.GetString(8), address = reader.GetString(9), review_count = reader.GetInt32(10), num_checkins = reader.GetInt32(11), review_rating = reader.GetDouble(12) });
+
                         }
                     }
                 }
@@ -837,6 +980,11 @@ namespace Team37_Mile2
 
                 FriendGrid.Items.Remove(FriendGrid.SelectedItem);
             }
+        }
+
+        private void checkin_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 
