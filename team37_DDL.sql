@@ -80,13 +80,20 @@ CREATE TABLE checkin_table(
 CREATE TABLE hours_open_table(
 	business_id CHAR(22),
 	
-	monday VARCHAR(11), /* Longest possible string would be all double-digit hours, such as "10:00-22:00". This adds up to 11 characters. */
-	tuesday VARCHAR(11),
-	wednesday VARCHAR(11),
-	thursday VARCHAR(11),
-	friday VARCHAR(11),
-	saturday VARCHAR(11),
-	sunday VARCHAR(11),
+	mondayOpen INT,
+	mondayClose INT,
+	tuesdayOpen INT,
+	tuesdayClose INT,
+	wednesdayOpen INT,
+	wednesdayClose INT,
+	thursdayOpen INT,
+	thursdayClose INT,
+	fridayOpen INT,
+	fridayClose INT,
+	saturdayOpen INT,
+	saturdayClose INT,
+	sundayOpen INT,
+	sundayClose INT,
 	
 	PRIMARY KEY (business_id),
 	FOREIGN KEY (business_id) REFERENCES business_table(business_id)
