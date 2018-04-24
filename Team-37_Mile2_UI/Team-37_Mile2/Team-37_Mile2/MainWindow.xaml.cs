@@ -498,9 +498,9 @@ namespace Team37_Mile2
             //end filter by meal
             
 
-            if (day != null)//works with set up of "10:00-20:00"
+            if (day.SelectedItem != null)//works with set up of "10:00-20:00"
             {
-                if (opened != null && closed != null)
+                if (opened.SelectedItem != null && closed.SelectedItem != null)
                 {
                     sb_open.Append(" AND O." + day.SelectedItem.ToString().ToLower() + " = '" + opened.SelectedItem.ToString() + "-" + closed.SelectedItem.ToString() + "'");
                 }
@@ -538,7 +538,8 @@ namespace Team37_Mile2
                     if (sb_open.Length > 0) { sql.Append(" " + sb_open.ToString()); }
                     if (sb_price.Length > 0) { sql.Append(" " + sb_price.ToString()); }
 
-                    if (sortby.SelectedIndex != 5)
+                    //If the Sort By selection is not "Nearest" or none...
+                    if (sortby.SelectedIndex != 5 && sortby.SelectedIndex != -1)
                     {
                         sql.Append(" ORDER BY ");
                         switch (sortby.SelectedIndex)
