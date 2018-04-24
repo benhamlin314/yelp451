@@ -3,14 +3,14 @@ CREATE OR REPLACE FUNCTION update_count() RETURNS trigger AS '
 BEGIN
     UPDATE business_table
     SET review_count=review_count+1
-    WHERE business_id=business_table.business_id;
+    WHERE business_id=new.business_id;
 RETURN NULL;
 END
 ' LANGUAGE plpgsql;
 
 CREATE TRIGGER AddReviewCount
 AFTER INSERT ON review_table
-FOR EACH STATEMENT
+FOR EACH ROW
 EXECUTE PROCEDURE update_count();
 
 /*trigger to update review_rating when a review is inserted*/
@@ -18,29 +18,31 @@ CREATE OR REPLACE FUNCTION update_rating() RETURNS trigger AS '
 BEGIN
     UPDATE business_table
     SET review_rating = (SELECT AVG(stars) FROM review_table)
-    WHERE business_id=business_table.business_id;
+    WHERE business_id=new.business_id;
 RETURN NULL;
 END
 ' LANGUAGE plpgsql;
 
 CREATE TRIGGER AddReviewRating
 AFTER INSERT ON review_table
-FOR EACH STATEMENT
+FOR EACH ROW
 EXECUTE PROCEDURE update_rating();
 
 /*trigger to update num_checkins in business_table when a user checks in to a business*/
 CREATE OR REPLACE FUNCTION update_checkins() RETURNS trigger AS '
 BEGIN
     UPDATE business_table
-    SET num_checkins = num_checkins+1
-    WHERE business_id=business_table.business_id;
+    SET num_checkins = (SELECT SUM(checkin_table.count_var)
+					FROM checkin_table
+					WHERE checkin_table.business_id = new.business_id)
+    WHERE business_id=new.business_id;
 RETURN NULL;
 END
 ' LANGUAGE plpgsql;
 
 CREATE TRIGGER CheckIn
-AFTER UPDATE OR INSERT OF count_var ON checkin_table
-FOR EACH STATEMENT
+AFTER UPDATE OR INSERT ON checkin_table
+FOR EACH ROW
 EXECUTE PROCEDURE update_checkins();
 
 /*tests for triggers*/
